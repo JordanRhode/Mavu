@@ -14,7 +14,7 @@ public class Home extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.home_layout, menu);
+        getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
     }
 }
