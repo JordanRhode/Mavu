@@ -5,7 +5,7 @@
 	if(isset($_REQUEST["action"]))
 	{
 		switch ($_REQUEST["action"]) {
-			case "Login": //requires an email and password to be submitted
+			case "Login":
 				if(isset($_REQUEST["email"])
 					and isset($_REQUEST["password"]))
 				{
@@ -30,7 +30,7 @@
 				session_unset();
 				session_destroy();
 				break;
-			case "Create Account": //requires first & last name, email, password, and date of birth
+			case "Create Account":
 			    if(isset($_REQUEST["fname"])
 			    	and isset($_REQUEST["lname"])
 					and isset($_REQUEST["email"])
@@ -49,7 +49,7 @@
 			        $_SESSION["name"] = $_REQUEST["fname"];
 			    }
 				break;
-			case "Modify Account"://requires first & last name, email, password, dob and account_id held in session
+			case "Modify Account":
 				if(isset($_REQUEST["fname"])
 			    	and isset($_REQUEST["lname"])
 					and isset($_REQUEST["email"])
@@ -69,6 +69,24 @@
 			        	or die("Couldn't update user account: " . mysql_error());
 			    }
 				break;
+			case "Create Post":
+					if(isset($_REQUEST["title"])
+						and isset($_REQUEST["description"])
+						and isset($_REQUEST["category"])
+						and isset($_REQUEST["city"])
+						and isset($_REQUEST["time"])
+						and isset($_REQUEST["date"])
+						and isset($_REQUEST["address"])
+						and isset($_REQUEST["zipcode"]))
+					{
+						$sql = "INSERT INTO mavu_post(account_id, title, description, category, city, time, date, address, zipcode) " .
+								"VALUES('" . $_SESSION["account_id"] . "', '" . $_REQUEST["title"] . "', '" . $_REQUEST["description"] . 
+									"', '" . $_REQUEST["category"] . "', '" . $_REQUEST["city"] . "', '" . $_REQUEST["time"] .
+									"', '" . $_REQUEST["date"] . "', '" . $_REQUEST["address"] . "', '" . $_REQUEST["zipcode"] . "')";
+						mysql_query($sql, $conn)
+								or die("Couldn't create post: " + mysql_error());
+					}
+					break;
 		}
 		mysql_close($conn);
 	}
