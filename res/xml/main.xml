@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Filter Settings" >
+        <EditTextPreference
+            android:key="city"
+            android:summary="Choose a city to filter by"
+            android:title="@string/prefs_city" />
+        
+        <CheckBoxPreference
+            android:key="food_cat"
+            android:summaryOn="Displaying Food Posts"
+            android:summaryOff="Not Displaying Food Posts"
+            android:title="@string/prefs_food_cat" />
+        <CheckBoxPreference
+            android:key="business_cat"
+            android:summaryOn="Displaying Business Posts"
+            android:summaryOff="Not Displaying Business Posts"
+            android:title="@string/prefs_business_cat" />
+        <CheckBoxPreference
+            android:key="music_cat"
+            android:summaryOn="Displaying Music Posts"
+            android:summaryOff="Not Displaying Music Posts"
+            android:title="@string/prefs_music_cat" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

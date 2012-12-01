@@ -23,7 +23,7 @@ import android.widget.Toast;
 
 public class Create_Post extends Activity {
 	
-	 //int accountID = getIntent().getIntExtra("accountID", 0);
+	 
 	 int postID;
      String title;
      String desc;
@@ -36,7 +36,8 @@ public class Create_Post extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_post_layout);
-               
+             
+        int accountID = getIntent().getIntExtra("accountId", 0);
         
 	}
         

@@ -5,24 +5,6 @@ import java.util.Vector;
 
 public class DataAccess {
 	
-	public int GetNextPostId()
-	{
-		//Make call to db..use asynch task or whatever... return next id in post table
-		return 0;
-	}
-	
-	public int GetNextAccountId()
-	{
-		//Make call to db..use asynch task or whatever... return next id in account table
-		return 0;
-	}
-	
-	public boolean EmailIsAvailable(String email)
-	{
-		//Check db to see if there is already an account with this email... if there is we cant add a new account.
-		// Just return a boolean value of if its available or not
-		return true;
-	}
 	
 	public void AddAccount(Account account)
 	{

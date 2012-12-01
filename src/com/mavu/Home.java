@@ -6,34 +6,31 @@ import java.util.Vector;
 
 
 import com.mavu.appcode.Account;
+import com.mavu.appcode.DataAccess;
 import com.mavu.appcode.Post;
+import com.mavu.appcode.SelectionParameters;
 import com.mavu.appcode.ViewHolder;
 
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
-import android.view.ContextMenu;
-import android.view.ContextMenu.ContextMenuInfo;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,15 +40,20 @@ public class Home extends ListActivity {
 	private LayoutInflater mInflater;
 	private Account currentAccount;
 	private EditText searchOption;
+	private Resources resources;
+	private SelectionParameters parameters;
+	private DataAccess Da = new DataAccess();
 
 
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_layout);
         
+        resources = this.getResources();
       //Todo:
 		//Maybe do a call to a local db to see if an account is stored..if so then pre fill the values to the logged in person
 		// assign currentAccount object
+        currentAccount = new Account(); //todo...temp
         
         //Saturday morning....
         // 1.) Context menu for search
@@ -127,8 +129,17 @@ public class Home extends ListActivity {
     		case R.id.createPost:
     			createPost();
     			break;
+    			
+    		case R.id.menu_prefs:     
+    		           Intent intent = new Intent()
+    		           		.setClass(this,
+    		                com.mavu.Settings.class);
+    		           this.startActivityForResult(intent, 0);
+    		           break;
+    		       
     	} 	
-    	return super.onOptionsItemSelected(item);
+    	//return super.onOptionsItemSelected(item);
+    	return true;
 
     }
 
@@ -220,10 +231,10 @@ public class Home extends ListActivity {
 	private void openAccount()
 	{
 		Intent intent = new Intent();
-		//intent.setClass(this, Account_Maint.class);
-		intent.setClass(getApplicationContext(), Account_Maint.class);
+		intent.setClass(this, Account_Maint.class);
+		//intent.setClass(getApplicationContext());
 		
-		if (currentAccount != null)
+		if (currentAccount != null && currentAccount.getAcccountId() > 0)
 		{
 			String[] accountInfo = new String[]{String.valueOf(currentAccount.getAcccountId()),
 												currentAccount.getfName(),
@@ -239,8 +250,7 @@ public class Home extends ListActivity {
 		}
 		
 		
-		startActivity(intent);	
-	    
+		startActivity(intent);		    
 	}
 
 	
@@ -257,7 +267,7 @@ public class Home extends ListActivity {
 		{
 			int accountId = currentAccount.getAcccountId();	
 			Intent intent = new Intent();
-			intent.setClass(this, Create_Post.class);
+			intent.setClass(getApplicationContext(), Create_Post.class);
 			intent.putExtra("accountId", accountId);
 			startActivity(intent);	
 		}
@@ -267,5 +277,48 @@ public class Home extends ListActivity {
 	{
 		
 	}
+	
+    @Override
+    public void onActivityResult(int reqCode, int resCode, Intent data)
+    {
+    	super.onActivityResult(reqCode, resCode, data);
+    	setOptionText();
+    }
+    
+    private void setOptionText()
+    {
+  
+        SharedPreferences preferences =
+        	    PreferenceManager.getDefaultSharedPreferences(this);
+        
+        String filter_city = preferences.getString("city", "n/a");
+    	Boolean filter_music_cat = preferences.getBoolean("music_cat", false);
+    	Boolean filter_business_cat = preferences.getBoolean("business_cat", false);
+    	Boolean filter_food_cat = preferences.getBoolean("food_cat", false);
+
+      	Toast.makeText(getApplicationContext(),
+      			filter_city,
+                Toast.LENGTH_SHORT).show();
+    	
+    	
+    	Time now = new Time();
+    	now.setToNow();
+    	
+    	@SuppressWarnings("deprecation")
+		Date lowDate = new Date(now.year, now.month, now.monthDay);
+    	@SuppressWarnings("deprecation")
+		Date HighDate = new Date(now.year, now.month, now.monthDay);
+    	
+    	parameters = new SelectionParameters(lowDate, HighDate, filter_city, filter_music_cat, filter_business_cat, filter_food_cat, "");
+    	parameters = new SelectionParameters(lowDate,HighDate,filter_city, filter_music_cat, filter_business_cat, filter_food_cat,"");
+    	
+    	Da.GetPosts(10, parameters);
+    
+//      This is the other way to get to the shared preferences:
+//    	SharedPreferences prefs = getSharedPreferences(
+//    			"com.androidbook.preferences.sample_preferences", 0);
+
+    	
+    }
 }
 

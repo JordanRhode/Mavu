@@ -91,10 +91,10 @@ public class Account_Maint extends Activity {
         	TextView lblDislikes = ((TextView)findViewById(R.id.lblDislikes));
         	lblDislikes.setText(currentAccount.getDislikes());
         	
-        	
+        	disableFields();
         }
 
-        disableFields();
+        
         
         Toast.makeText(getApplicationContext(),
 				"No account was found. You must create a new Account",

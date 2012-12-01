@@ -22,6 +22,20 @@
 	<string name="aDislikes">Dislikes</string>	
 	<string name="btnViewPosts">View Posts</string>	
 	
+	<string name="prefTitle">Filters</string>
+    <string name="prefSummary">Set your Post Result Filters</string>
+    <string name="flight_sort_option_default_value">1</string>
+    <string name="dialogTitle">Choose Filter Options</string>
+    <string name="listSummary">Set Search Options</string>
+    <string name="menu_prefs_title">Settings</string>
+    <string name="menu_quit_title">Quit</string>
+	<string name="prefs">Filters</string>	
+	<string name="prefs_city">City</string>	
+	<string name="prefs_category">Category</string>	
+	<string name="prefs_music_cat">Show Music</string>	 
+	<string name="prefs_food_cat">Show Food</string>
+	<string name="prefs_business_cat">Show Businesses</string>
+	
 	<string-array name="searchOptions">
 		<item>By Title</item>
 		<item>By Date</item>

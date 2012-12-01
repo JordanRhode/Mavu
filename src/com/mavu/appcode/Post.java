@@ -77,23 +77,9 @@ public class Post {
 	
 //Setters	
 
-	
-<<<<<<< HEAD
-	public Post(int id, String title, String desc, String category, String address, String city, String time, Date date)
-	{
-		this.id = id;
-		this.title = title;
-		this.desc = desc;
-		this.category = category;
-		this.city = city;
-		this.time = time;
-		this.date = date;
-		this.address = address;
 
-=======
 	public void setAccountID(int id) {
 		this.accountID = id;
->>>>>>> create_post.java
 	}
 	
 	public void setTitle(String title) {
