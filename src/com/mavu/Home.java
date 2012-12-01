@@ -7,6 +7,9 @@ import com.mavu.appcode.Post;
 import com.mavu.appcode.ViewHolder;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
+import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Context;
@@ -26,9 +29,18 @@ public class Home extends ListActivity {
 	private Vector<Post> posts = new Vector<Post>();
 	private LayoutInflater mInflater;
 
-    public void onCreate(Bundle savedInstanceState) {
+    @SuppressLint({ "NewApi", "NewApi" })
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_layout);
+        
+        //Saturday morning....
+        // 1.) Context menu for search
+        // 2.) Preferences...possibly drop down. Dont waste time if we cant figure it out
+        // 3.) Account Form
+        
+        //todo: for drop down:
+        //http://wptrafficanalyzer.in/blog/adding-drop-down-navigation-to-action-bar-in-android/
         
         
         // Todo:
@@ -56,6 +68,9 @@ public class Home extends ListActivity {
         CustomAdapter adapter = new CustomAdapter(this, android.R.id.list, posts);
         setListAdapter(adapter);        
         getListView().setTextFilterEnabled(true);
+        
+        
+        
 
     }
 
