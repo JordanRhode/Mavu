@@ -54,6 +54,7 @@ public class Post {
 		this.time = time;
 		this.date = date;
 		this.address = address;
+
 	}
 	
 	public void setTitle(String title) {

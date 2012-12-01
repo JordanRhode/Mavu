@@ -7,4 +7,11 @@
         android:title="@string/search"
         android:icon="@drawable/ic_action_search"
         android:showAsAction="ifRoom"/>
+    <item android:id="@+id/accountMenu"
+        android:title="@string/account_view"
+        android:showAsAction="ifRoom"/>
+    <item android:id="@+id/createPost"
+        android:title="@string/create_post"
+        android:icon="@drawable/ic_menu_add"
+        android:showAsAction="ifRoom"/>
 </menu>

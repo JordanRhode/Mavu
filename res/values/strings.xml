@@ -3,11 +3,27 @@
     <string name="app_name">Mavu</string>
     <string name="account_maint">Account Info</string>
     <string name="account_view">Account</string>
+    <string name="account_edit">Edit Account</string>
+    <string name="account_save">Save Account</string>
     <string name="create_post">Create Post</string>
     <string name="post_view">Post Info</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_home">Mavu</string>
     <string name="search">Search</string>
 	<string name="category">Category</string>
+	<string name="aFName">First Name</string>
+	<string name="aLName">Last Name</string>
+	<string name="aEmail">Email (Used to Login)</string>
+	<string name="aDOB">Date Of Birth</string>
+	<string name="aPassword">Password</string>
+	<string name="aConfirmPass">Confirm Password</string>
+	<string name="aLikes">Likes</string>
+	<string name="aDislikes">Dislikes</string>	
+	<string name="btnViewPosts">View Posts</string>	
 	
+	<string-array name="searchOptions">
+		<item>By Title</item>
+		<item>By Date</item>
+		<item>By Person</item>
+</string-array>
 </resources>

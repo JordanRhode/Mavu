@@ -1,8 +1,11 @@
 package com.mavu;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+
+import com.mavu.appcode.Account;
 import com.mavu.appcode.Post;
 import com.mavu.appcode.ViewHolder;
 
@@ -13,13 +16,24 @@ import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,11 +41,17 @@ public class Home extends ListActivity {
 
 	private Vector<Post> posts = new Vector<Post>();
 	private LayoutInflater mInflater;
+	private Account currentAccount;
+	private EditText searchOption;
 
-    @SuppressLint({ "NewApi", "NewApi" })
+
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.home_layout);
+        
+      //Todo:
+		//Maybe do a call to a local db to see if an account is stored..if so then pre fill the values to the logged in person
+		// assign currentAccount object
         
         //Saturday morning....
         // 1.) Context menu for search
@@ -55,9 +75,9 @@ public class Home extends ListActivity {
         //Temporarily going to setup our list view with dummy values
         mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         posts = new Vector<Post>();
-        Post post1 = new Post(1, "item1", "description1", "food","123 smith", "Stevens Point", "12:00", "12/10/2000");
-        Post post2 = new Post(2, "item2", "description2", "business", "222 jones", "Wausau", "12:00", "12/10/2000");
-        Post post3 = new Post(3, "item3", "description2", "music", "222 jones", "Wausau", "12:00", "12/10/2000");
+        Post post1 = new Post(1, "item1", "description1", "food","123 smith", "Stevens Point", "12:00", new Date(2012, 4, 6));
+        Post post2 = new Post(2, "item2", "description2", "business", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
+        Post post3 = new Post(3, "item3", "description2", "music", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
         
         posts.add(post1);
         posts.add(post2);
@@ -68,14 +88,48 @@ public class Home extends ListActivity {
         setListAdapter(adapter);        
         getListView().setTextFilterEnabled(true);
         
-        
-        
+       
 
     }
 
-    public boolean onCreateOptionsMenu(Menu menu) {
+
+@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
         return true;
+    }
+
+@Override
+    public boolean onOptionsItemSelected(MenuItem item) 
+    {
+    	Toast.makeText(getApplicationContext(),
+				"clicked",
+                Toast.LENGTH_SHORT).show();
+    	switch (item.getItemId())
+    	{
+    		case R.id.accountMenu:
+    			Toast.makeText(getApplicationContext(),
+    					"clicked account",
+    	                Toast.LENGTH_SHORT).show();
+    			//Todo:
+    			//Maybe do a call to a local db to see if an account is stored..if so then pre fill the values to the logged in person
+    			// assign currentAccount object
+    			openAccount();
+    			break;
+    			
+    		case R.id.search:
+    			Toast.makeText(getApplicationContext(),
+    					"clicked search",
+    	                Toast.LENGTH_SHORT).show();
+    			openSearchContext();
+    			break;
+    	
+    		case R.id.createPost:
+    			createPost();
+    			break;
+    	} 	
+    	return super.onOptionsItemSelected(item);
+
     }
 
 
@@ -163,4 +217,55 @@ public class Home extends ListActivity {
 
 	}
 
+	private void openAccount()
+	{
+		Intent intent = new Intent();
+		//intent.setClass(this, Account_Maint.class);
+		intent.setClass(getApplicationContext(), Account_Maint.class);
+		
+		if (currentAccount != null)
+		{
+			String[] accountInfo = new String[]{String.valueOf(currentAccount.getAcccountId()),
+												currentAccount.getfName(),
+												currentAccount.getlName(),
+												currentAccount.getEmail(),
+												currentAccount.getDob().toString(),
+												currentAccount.getPassword(),
+												String.valueOf(currentAccount.getLikes()),
+												String.valueOf(currentAccount.getDislikes())};	
+		    
+	    
+			intent.putExtra("accountInfo", accountInfo);
+		}
+		
+		
+		startActivity(intent);	
+	    
+	}
+
+	
+	private void createPost()
+	{
+		if (currentAccount.getAcccountId() < 1)
+		{
+			//means no account is selected.
+			Toast.makeText(getApplicationContext(),
+					"You must have an Account and be logged in order to create a post",
+	                Toast.LENGTH_SHORT).show();
+		}
+		else
+		{
+			int accountId = currentAccount.getAcccountId();	
+			Intent intent = new Intent();
+			intent.setClass(this, Create_Post.class);
+			intent.putExtra("accountId", accountId);
+			startActivity(intent);	
+		}
+	}
+
+	private void openSearchContext()
+	{
+		
+	}
 }
+

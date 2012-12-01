@@ -11,6 +11,19 @@ public class DataAccess {
 		return 0;
 	}
 	
+	public int GetNextAccountId()
+	{
+		//Make call to db..use asynch task or whatever... return next id in account table
+		return 0;
+	}
+	
+	public boolean EmailIsAvailable(String email)
+	{
+		//Check db to see if there is already an account with this email... if there is we cant add a new account.
+		// Just return a boolean value of if its available or not
+		return true;
+	}
+	
 	public void AddAccount(Account account)
 	{
 		//todo
@@ -61,8 +74,8 @@ public class DataAccess {
 	public Post GetPost(int postId)
 	{
 		//Make call to db..use asynch task or whatever... end result just needs to give back the account
-		//Post post = new Post(1, "test", "test", "food", "111 smith str", "Ste po", "8pm", new Date(2009, 1,2)); //whatever process you use..
-		Post post = new Post(1, "test", "test", "food", "111 smith str", "Ste po", "8pm", "2011");
+		Post post = new Post(1, "test", "test", "food", "111 smith str", "Ste po", "8pm", new Date(2009, 1,2)); //whatever process you use..
+		
 		return post;
 	}
 	
