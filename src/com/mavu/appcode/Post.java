@@ -4,11 +4,51 @@ import java.util.Date;
 
 public class Post {
 	
+	private int accountID;
+
+	private String title;
+	private String desc;
+	private String category;
+	private String city;
+	private String time;
+	private Date date;
+	private String address;
+	
+	public Post(int accountID, String title, String desc, String category, String address, String city, String time, Date date)
+	{
+		/*this.accountID = accountID;
+		this.postID = postID;
+		this.title = title;
+		this.desc = desc;
+		this.category = category;
+		this.city = city;
+		this.time = time;
+		this.date = date;
+		this.address = address;*/
+		
+		this.setAccountID(accountID);
+		this.setTitle(title);
+		this.setDesc(desc);
+		this.setCategory(category);
+		this.setAddress(address);
+		this.setCity(city);
+		this.setTime(time);
+		this.setDate(date);
+		
+	}
+
+	
+//Getters
+	
+
+	public int getAccountID()
+	{
+		return this.accountID;
+	}
 	public String getTitle()
 	{
 		return this.title;
 	}
-	
 	public String getDesc()
 	{
 		return this.desc;
@@ -34,16 +74,11 @@ public class Post {
 		return this.address;
 	}
 	
-	private int id;
-	private String title;
-	private String desc;
-	private String category;
-	private String city;
-	private String time;
-	private Date date;
-	private String address;
 	
+//Setters	
+
 	
+<<<<<<< HEAD
 	public Post(int id, String title, String desc, String category, String address, String city, String time, Date date)
 	{
 		this.id = id;
@@ -55,6 +90,10 @@ public class Post {
 		this.date = date;
 		this.address = address;
 
+=======
+	public void setAccountID(int id) {
+		this.accountID = id;
+>>>>>>> create_post.java
 	}
 	
 	public void setTitle(String title) {
@@ -89,9 +128,9 @@ public class Post {
 	//This is my way of serializing with a comma delimiter :)
 	public String toString()
 	{
-		return String.valueOf(id) + "," + title + "," + desc + "," 
-								  + category + "," + address + "," 
-								  + city + "," + time + "," + date;
+		return title + "," + desc + "," 
+			+ category + "," + address + "," 
+		    + city + "," + time + "," + date;
 	
 	}
 
