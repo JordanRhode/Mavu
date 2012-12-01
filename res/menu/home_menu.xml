@@ -7,6 +7,7 @@
         android:title="@string/search"
         android:icon="@drawable/ic_action_search"
         android:showAsAction="ifRoom"/>
+<<<<<<< HEAD
     <item android:id="@+id/accountMenu"
         android:title="@string/account_view"
         android:showAsAction="ifRoom"/>
@@ -14,4 +15,13 @@
         android:title="@string/create_post"
         android:icon="@drawable/ic_menu_add"
         android:showAsAction="ifRoom"/>
+=======
+    
+    <!-- Test icon for creating post     todo:change icon!!!! -->
+    <item android:id="@+id/create_post"
+        android:title="@string/create_post"
+        android:icon="@drawable/ic_launcher"
+        android:showAsAction="ifRoom"
+        />
+>>>>>>> create_post.java
 </menu>

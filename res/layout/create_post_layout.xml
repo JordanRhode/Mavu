@@ -21,6 +21,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_weight="1"
+          android:inputType="textCapSentences"
           android:ems="10" >
 
           <requestFocus />
@@ -39,12 +40,12 @@
         android:text="Category:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <EditText
-        android:id="@+id/txtCategory"
+    <Spinner
+        android:id="@+id/spnCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10" />
+        android:entries="@array/list_categories"
+        android:layout_weight="1" />
     
 	</LinearLayout>
 
@@ -66,7 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:inputType="date" />
+        android:inputType="date"
+        android:text="ex: 01-01-2012" />
     
 	</LinearLayout>
 
@@ -81,14 +83,15 @@
         android:layout_height="wrap_content"
         android:text="Time:"
         android:textAppearance="?android:attr/textAppearanceMedium" />
-
+
     <EditText
         android:id="@+id/txtTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:inputType="time" />
+        android:inputType="time|text"
+        android:text="ex: 12:00am" />
 
 	</LinearLayout>
 
@@ -109,6 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
+        android:inputType="textCapSentences"
         android:ems="10" />
     
 	</LinearLayout>
@@ -130,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:inputType="textPostalAddress" />
+        android:inputType="textPostalAddress|textCapSentences" />
     
 	</LinearLayout>
 
@@ -152,20 +156,16 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ems="10"
-        android:inputType="textMultiLine" />
+        android:inputType="textMultiLine|textCapSentences" />
 
 	</LinearLayout>
-
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal" >
-    <Button
-        android:id="@+id/btnSubmitPost"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Submit Post" />
     
 	</LinearLayout>
+
+
 
 </LinearLayout>
