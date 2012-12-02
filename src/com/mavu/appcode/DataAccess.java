@@ -1,16 +1,38 @@
 package com.mavu.appcode;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	
 
 	private OnResponseListener responder;
+	private SelectionParameters parameters;
 	
 	public DataAccess(OnResponseListener responder){
 		this.responder = responder;
@@ -20,33 +42,96 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		this.responder = responder;
 	}
 	
+	public DataAccess(Context context, OnResponseListener responder, SelectionParameters parameters){
+		this.responder = responder;
+		this.parameters = parameters;
+	}
+	
 	@Override
 	protected Boolean doInBackground(String... params) {
-		
+		/*
+		 * case 1: Login
+		 * case 2: Create Account
+		 * case 3: Update Account
+		 * case 4: Get Account
+		 * case 5: Create Post
+		 * case 6: Get Posts
+		 * case 7: Get Individual Post
+		 */
 		switch (Integer.parseInt(params[0])) {
 		case 1:
-			//TODO
-			//write account to db
+			//TODO Login
 			break;
 		case 2:
-			//TODO update account
+			//TODO Create Account
 			break;
 		case 3:
-			//TODO get account data
+			//TODO update account
 			break;
 		case 4:
-			//TODO Get posts from database
+			//TODO get account
 			break;
 		case 5:
 			//TODO create post
 			break;
 		case 6:
-			//TODO get individual post based on post id
+			InputStream is = null;
+			String json = "";
+			
+			List<NameValuePair> nameValuePair = new ArrayList<NameValuePair>(8);
+			nameValuePair.add(new BasicNameValuePair("action", "Get Posts"));
+			nameValuePair.add(new BasicNameValuePair("lowDate", parameters.getLowDate().toString()));
+			nameValuePair.add(new BasicNameValuePair("highDate", parameters.getHighDate().toString()));
+			nameValuePair.add(new BasicNameValuePair("city", parameters.getCity().toString()));
+			nameValuePair.add(new BasicNameValuePair("music", parameters.getMusic_category().toString()));
+			nameValuePair.add(new BasicNameValuePair("business", parameters.getBusiness_category().toString()));
+			nameValuePair.add(new BasicNameValuePair("food", parameters.getFood_category().toString()));
+			nameValuePair.add(new BasicNameValuePair("title", parameters.getTitle().toString()));
+			
+			HttpClient httpClient = new DefaultHttpClient();
+			HttpPost httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
+			
+			try {
+				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
+				HttpResponse response = httpClient.execute(httpPost);
+				HttpEntity entity = response.getEntity();
+				is = entity.getContent();
+			}	catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}	catch (ClientProtocolException e) {
+				e.printStackTrace();
+			}	catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"));
+				StringBuilder sb = new StringBuilder();
+				String line = null;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				is.close();
+				json = sb.toString();
+			}	catch (Exception e) {
+				Log.e("Buffer Error", "Error converting result " + e.toString());
+			}
+			
+			try {
+				JSONArray jArray = new JSONArray(json);
+				JSONObject jObj = jArray.getJSONObject(0);
+				//TODO make vector list of json data vals
+			}	catch (JSONException e) {
+				Log.e("JSON Parser", "Error parsing data " + e.toString());
+			}
+			return true;
+		case 7:
+			//TODO get individual post
 			break;
 		default:
-			break;
+			return false;
 		}
-		return null;
+		return false;
 	}
 	
 	@Override
@@ -65,63 +150,4 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		public void onSuccess();
 		public void onFailure(String message);
 	}
-	
-	
-//	public void AddAccount(Account account)
-//	{
-//		//todo
-//		//write account to db
-//	}
-//	public void UpdateAccount(Account account)
-//	{
-//		//use account id to find account record in db
-//		//write account to db
-//	}
-//	
-//	public Account GetAccount(int accountId)
-//	{
-//		//Make call to db..use asynch task or whatever... end result just needs to give back the account
-//		return new Account();
-//	}
-//	
-//	public Vector<Post> GetPosts(int amount, SelectionParameters parameters)
-//	{	
-//		/*selectionParameters parameters;
-//		
-//		String querystring;
-//		queryString = "Select * From TB_Post WHERE "
-//					+ "date >= parameters.DateLow AND"
-//					+ "date <= parameters.DateHigh "
-//	    if (parameters.city != "")
-//	    {
-//	    	queryString += "AND city = " parameters.city;
-//	    }
-//		if (parameters.category != "")
-//		{
-//			queryString += "AND category = " parameters.category
-//		}	
-//		if (parameters.title != "")
-//		{
-//			queryString += "AND title = " parameters.title
-//		}	*/
-//		
-//		//Make call to db..use asynch task or whatever... end result just needs to give vector of posts...we need json poo parser
-//		return new Vector<Post>();
-//	}
-//	
-//	public void CreatePost(Post post)
-//	{
-//		//Write post to db..
-//	}
-//	
-//	public Post GetPost(int postId)
-//	{
-//		//Make call to db..use asynch task or whatever... end result just needs to give back the account
-//		Post post = new Post(1, "test", "test", "food", "111 smith str", "Ste po", "8pm", new Date(2009, 1,2)); //whatever process you use..
-//		
-//		return post;
-//	}
-
-	
-
 }

@@ -4,7 +4,7 @@
 
 	if(isset($_REQUEST["action"]))
 	{
-		switch ($_REQUEST["action"]) {
+                switch ($_REQUEST["action"]) {
 			case "Login":
 				if(isset($_REQUEST["email"])
 					and isset($_REQUEST["password"]))
@@ -19,16 +19,10 @@
 						or die("Couldn't look up user information: " . mysql_error());
 					if($row = mysql_fetch_array($result))
 					{
-						session_start();
-						$_SESSION["account_id"] = $row["account_id"];
-						$_SESSION["name"] = $row["name"];
+						$output[] = $row;
+						print(json_encode($output));
 					}
 				}
-				break;
-			case "Logout":
-				session_start();
-				session_unset();
-				session_destroy();
 				break;
 			case "Create Account":
 			    if(isset($_REQUEST["fname"])
@@ -37,19 +31,17 @@
 					and isset($_REQUEST["password"])
 			    	and isset($_REQUEST["dob"]))
 			    {
+			        $userID = uniqid();
 			        $password = sha1($_REQUEST["password"] . $salt);
 
-			     	$sql = "INSERT INTO mavu_account(first_name, last_name, email, password, dob) " .
-			     			"VALUES('" . $_REQUEST["fname"] . "', '" . $_REQUEST["lname"] . "', '" . 
+			     	$sql = "INSERT INTO mavu_account(account_id, first_name, last_name, email, password, dob) " .
+			     			"VALUES('" . $userID . "', '" . $_REQUEST["fname"] . "', '" . $_REQUEST["lname"] . "', '" . 
 			     			 $_REQUEST["email"] . "', '" . $password . "', '" . $_REQUEST["dob"] . "')";
 			        mysql_query($sql, $conn) 
 			        	or die("Couldn't create user account: " . mysql_error());
-			        session_start();
-			        $_SESSION["account_id"] = mysql_insert_id($conn);
-			        $_SESSION["name"] = $_REQUEST["fname"];
 			    }
 				break;
-			case "Modify Account":
+			case "Update Account":
 				if(isset($_REQUEST["fname"])
 			    	and isset($_REQUEST["lname"])
 					and isset($_REQUEST["email"])
@@ -69,6 +61,9 @@
 			        	or die("Couldn't update user account: " . mysql_error());
 			    }
 				break;
+			case "Get Account":
+				//TODO get account data from DB from account id
+				break;
 			case "Create Post":
 					if(isset($_REQUEST["title"])
 						and isset($_REQUEST["description"])
@@ -87,6 +82,65 @@
 								or die("Couldn't create post: " + mysql_error());
 					}
 					break;
+			case "GetPosts":
+                        if(isset($_REQUEST["lowDate"])
+					and isset($_REQUEST["highDate"])
+					and isset($_REQUEST["city"])
+					and isset($_REQUEST["music"])
+					and isset($_REQUEST["business"])
+					and isset($_REQUEST["food"]))
+				{
+                                     
+					$sql = "SELECT post_id, title, description, category, city, time, date, address " .
+					"FROM mavu_post " .
+					"WHERE date BETWEEN '" . $_REQUEST["lowDate"] . "' and '" . $_REQUEST["highDate"] . "' " .
+					"AND city='" . $_REQUEST["city"] . "' ";
+                                        //echo $sql;
+					if($_REQUEST["music"] == "true" && $_REQUEST["business"] == "true" && $_REQUEST["food"] == "true")
+					{
+						$category = " AND category IN ('music', 'business', 'food') ";
+					}
+					else if($_REQUEST["music"] == "true" && $_REQUEST["business"] == "false" && $_REQUEST["food"] == "true")
+					{
+						$category = " AND category IN(music, food) ";
+					}
+					else if($_REQUEST["music"] == "true" && $_REQUEST["business"] == "false" && $_REQUEST["food"] == "false")
+					{
+						$category = " AND category IN(music) ";
+					}
+					else if($_REQUEST["music"] == "true" && $_REQUEST["business"] == "true" && $_REQUEST["food"] == "false")
+					{
+						$category = " AND category IN(music, business) ";
+					}
+					else if($_REQUEST["music"] == "false" && $_REQUEST["business"] == "true" && $_REQUEST["food"] == "true")
+					{
+						$category = " AND category IN(business, food) ";
+					}
+					else if($_REQUEST["music"] == "false" && $_REQUEST["business"] == "true" && $_REQUEST["food"] == "false")
+					{
+						$category = " AND category IN(business) ";
+					}
+					else if($_REQUEST["music"] == "false" && $_REQUEST["business"] == "false" && $_REQUEST["food"] == "true")
+					{
+						$category = " AND category IN(food)";
+					}
+					$sql = $sql . $category;
+                                        
+					if(isset($_REQUEST["title"])){
+						$sql = $sql . " AND title='" . $_REQUEST["title"] . "'";
+					}
+					echo $sql . "<br/>";	
+					$result = mysql_query($sql, $conn) or die(mysql_error());
+					while($row = mysql_fetch_array($result))
+					{
+						$output[]=$row;
+						print(json_encode($output));
+                                        }
+
+                                }
+			//mysql_close();
+			break;
 		}
-		mysql_close($conn);
 	}
+
+	?>
