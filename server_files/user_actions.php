@@ -43,6 +43,7 @@
 				break;
 			case "Update Account":
 				if(isset($_REQUEST["fname"])
+					and isset($_REQUEST["account_id"])
 			    	and isset($_REQUEST["lname"])
 					and isset($_REQUEST["email"])
 					and isset($_REQUEST["password"])
@@ -56,16 +57,29 @@
 			     			"', email='" . $_REQUEST["email"] .
 			     			"', password='" . $password .
 			     			"', dob='" . $_REQUEST["dob"] . " " .
-			     			"WHERE account_id=" . $_SESSION["account_id"];
+			     			"WHERE account_id=" . $_REQUEST["account_id"];
 			        mysql_query($sql, $conn) 
 			        	or die("Couldn't update user account: " . mysql_error());
 			    }
 				break;
 			case "Get Account":
-				//TODO get account data from DB from account id
+					if(isset($_REQUEST["account_id"]))
+					{
+						$sql = "SELECT * " .
+						"FROM mavu_account " .
+						"WHERE account_id=" . $_REQUEST["account_id"];
+						$result = mysql_query($sql)
+							or die(mysql_error());
+						while($row = mysql_fetch_array($result))
+						{
+							$output[] = $row;
+							print(json_encode($output));
+						}
+					}
 				break;
 			case "Create Post":
 					if(isset($_REQUEST["title"])
+						and isset($_REQUEST["account_id"])
 						and isset($_REQUEST["description"])
 						and isset($_REQUEST["category"])
 						and isset($_REQUEST["city"])
@@ -75,14 +89,14 @@
 						and isset($_REQUEST["zipcode"]))
 					{
 						$sql = "INSERT INTO mavu_post(account_id, title, description, category, city, time, date, address, zipcode) " .
-								"VALUES('" . $_SESSION["account_id"] . "', '" . $_REQUEST["title"] . "', '" . $_REQUEST["description"] . 
+								"VALUES('" . $_REQUEST["account_id"] . "', '" . $_REQUEST["title"] . "', '" . $_REQUEST["description"] . 
 									"', '" . $_REQUEST["category"] . "', '" . $_REQUEST["city"] . "', '" . $_REQUEST["time"] .
 									"', '" . $_REQUEST["date"] . "', '" . $_REQUEST["address"] . "', '" . $_REQUEST["zipcode"] . "')";
 						mysql_query($sql, $conn)
 								or die("Couldn't create post: " + mysql_error());
 					}
 					break;
-			case "GetPosts":
+			case "Get Posts":
                         if(isset($_REQUEST["lowDate"])
 					and isset($_REQUEST["highDate"])
 					and isset($_REQUEST["city"])

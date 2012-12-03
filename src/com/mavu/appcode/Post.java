@@ -4,17 +4,17 @@ import java.util.Date;
 
 public class Post {
 	
-	private int accountID;
+	private String accountID;
 
 	private String title;
 	private String desc;
 	private String category;
 	private String city;
 	private String time;
-	private Date date;
+	private String date;
 	private String address;
 	
-	public Post(int accountID, String title, String desc, String category, String address, String city, String time, Date date)
+	public Post(String accountID, String title, String desc, String category, String address, String city, String time, String date)
 	{
 		/*this.accountID = accountID;
 		this.postID = postID;
@@ -41,7 +41,7 @@ public class Post {
 //Getters
 	
 
-	public int getAccountID()
+	public String getAccountID()
 	{
 		return this.accountID;
 	}
@@ -65,7 +65,7 @@ public class Post {
 	{
 		return this.time;
 	}
-	public Date getDate()
+	public String getDate()
 	{
 		return this.date;
 	}
@@ -78,7 +78,7 @@ public class Post {
 //Setters	
 
 
-	public void setAccountID(int id) {
+	public void setAccountID(String id) {
 		this.accountID = id;
 	}
 	
@@ -102,7 +102,7 @@ public class Post {
 		this.time = time;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
