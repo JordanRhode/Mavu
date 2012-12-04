@@ -79,9 +79,9 @@ public class Home extends ListActivity {
         //Temporarily going to setup our list view with dummy values
         mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         posts = new Vector<Post>();
-        Post post1 = new Post(1, "item1", "description1", "food","123 smith", "Stevens Point", "12:00", new Date(2012, 4, 6));
-        Post post2 = new Post(2, "item2", "description2", "business", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
-        Post post3 = new Post(3, "item3", "description2", "music", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
+        Post post1 = new Post("1", "item1", "description1", "food","123 smith", "Stevens Point", "12:00", new Date(2012, 4, 6));
+        Post post2 = new Post("3", "item2", "description2", "business", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
+        Post post3 = new Post("2", "item3", "description2", "music", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
         
         posts.add(post1);
         posts.add(post2);
@@ -306,17 +306,15 @@ public class Home extends ListActivity {
     	Time now = new Time();
     	now.setToNow();
     	
-    	//@SuppressWarnings("deprecation")
-		//Date lowDate = new Date(now.year, now.month, now.monthDay);
-    	//@SuppressWarnings("deprecation")
-		//Date HighDate = new Date(now.year, now.month, now.monthDay);
-    	String lowDate = "1000-01-01";
-    	String highDate = "9999-01-01";
+    	@SuppressWarnings("deprecation")
+		Date lowDate = new Date(now.year, now.month, now.monthDay);
+    	@SuppressWarnings("deprecation")
+		Date highDate = new Date(now.year, now.month, now.monthDay);
     	
     	parameters = new SelectionParameters(lowDate, highDate, filter_city, filter_music_cat, filter_business_cat, filter_food_cat, "");
     	parameters = new SelectionParameters(lowDate,highDate,filter_city, filter_music_cat, filter_business_cat, filter_food_cat,"");
     	
-    	Da.GetPosts(10, parameters);
+    	//Da.GetPosts(10, parameters);
     
 //      This is the other way to get to the shared preferences:
 //    	SharedPreferences prefs = getSharedPreferences(

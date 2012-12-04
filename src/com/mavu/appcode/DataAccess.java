@@ -219,7 +219,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("category", postVals.getCategory()));
 			nameValuePair.add(new BasicNameValuePair("city", postVals.getCity()));
 			nameValuePair.add(new BasicNameValuePair("time", postVals.getTime()));
-			nameValuePair.add(new BasicNameValuePair("date", postVals.getDate()));
+			nameValuePair.add(new BasicNameValuePair("date", postVals.getDate().toString()));
 			nameValuePair.add(new BasicNameValuePair("address", postVals.getAddress()));
 			//TODO do we need zipcode?
 			//nameValuePair.add(new BasicNameValuePair("zipcode", postVals.getZip()));
