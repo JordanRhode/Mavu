@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
+import org.json.JSONObject;
+
 
 import com.mavu.appcode.Account;
 import com.mavu.appcode.DataAccess;
@@ -77,15 +79,21 @@ public class Home extends ListActivity {
          */
         
         //Temporarily going to setup our list view with dummy values
-        mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        posts = new Vector<Post>();
-        Post post1 = new Post("1", "item1", "description1", "food","123 smith", "Stevens Point", "12:00", new Date(2012, 4, 6));
-        Post post2 = new Post("3", "item2", "description2", "business", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
-        Post post3 = new Post("2", "item3", "description2", "music", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
+        /*
+         * mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        	posts = new Vector<Post>();
+        	Post post1 = new Post("1", "item1", "description1", "food","123 smith", "Stevens Point", "12:00", new Date(2012, 4, 6));
+        	Post post2 = new Post("3", "item2", "description2", "business", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
+        	Post post3 = new Post("2", "item3", "description2", "music", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
         
-        posts.add(post1);
-        posts.add(post2);
-        posts.add(post3);
+	        posts.add(post1);
+	        posts.add(post2);
+	        posts.add(post3);
+         */
+        parameters = new SelectionParameters(null, null, "Stevens Point", true, true, true, null);
+        Da = new DataAccess(responder, parameters);
+        Da.execute("6");
+        
         //, not sure what 2nd and 3rd parameter should be, maybe they need to be flipped
         //CustomAdapter adapter = new CustomAdapter(this, R.layout.custom_post_layout,R.id.postTitle, posts);
         CustomAdapter adapter = new CustomAdapter(this, android.R.id.list, posts);
@@ -95,6 +103,22 @@ public class Home extends ListActivity {
        
 
     }
+	
+	protected OnResponseListener onResponseListener = new OnResponseListener() {
+			
+			public void onSuccess(String message ) {
+				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+			}
+			
+			public void onFailure(String message) {
+				Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();
+			}
+
+			public void onSuccess() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
 
 
 @Override

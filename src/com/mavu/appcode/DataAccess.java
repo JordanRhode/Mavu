@@ -34,6 +34,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	private OnResponseListener responder;
 	private SelectionParameters parameters;
 	private Post postVals;
+	JSONObject jObj;
 	
 	public DataAccess(OnResponseListener responder){
 		this.responder = responder;
@@ -203,7 +204,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			
 			try {
 				JSONArray jArray = new JSONArray(json);
-				JSONObject jObj = jArray.getJSONObject(0);
+				jObj = jArray.getJSONObject(0);
 				//TODO make vector list of json data vals
 			}	catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
@@ -283,7 +284,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			
 			try {
 				JSONArray jArray = new JSONArray(json);
-				JSONObject jObj = jArray.getJSONObject(0);
+				jObj = jArray.getJSONObject(0);
 				//TODO make vector list of json data vals
 			}	catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
@@ -304,14 +305,14 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 //			this.progressDialog.dismiss();
 //		}
 		if(result)
-			responder.onSuccess();
+			responder.onSuccess("Success");
 		else {
 			responder.onFailure("Fail");
 		}
 	}
 	
 	public interface OnResponseListener {
-		public void onSuccess();
+		public void onSuccess(String message);
 		public void onFailure(String message);
 	}
 }
