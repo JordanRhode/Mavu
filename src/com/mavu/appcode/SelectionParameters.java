@@ -4,19 +4,19 @@ import java.util.Date;
 
 public class SelectionParameters {
 
-	public Date getLowDate() {
+	public String getLowDate() {
 		return lowDate;
 	}
 
-	public void setLowDate(Date lowDate) {
+	public void setLowDate(String lowDate) {
 		this.lowDate = lowDate;
 	}
 
-	public Date getHighDate() {
+	public String getHighDate() {
 		return highDate;
 	}
 
-	public void setHighDate(Date highDate) {
+	public void setHighDate(String highDate) {
 		this.highDate = highDate;
 	}
 
@@ -62,8 +62,8 @@ public class SelectionParameters {
 	}
 
 	
-	private Date lowDate;// --- if not specified then set to like 1900's 
-	private Date highDate; //--- if not specified then set to like 9999's
+	private String lowDate;// --- if not specified then set to like 1900's 
+	private String highDate; //--- if not specified then set to like 9999's
 	private String city;
 	private Boolean business_category;
 	private Boolean food_category;
@@ -72,7 +72,7 @@ public class SelectionParameters {
 	
 
 	@SuppressWarnings("deprecation")
-	public SelectionParameters(Date lowDate2, Date highDate2, String city, Boolean music, Boolean business, Boolean food, String title)
+	public SelectionParameters(String lowDate2, String highDate2, String city, Boolean music, Boolean business, Boolean food, String title)
 	{
 		this.lowDate = lowDate2;
 		this.highDate = highDate2;
@@ -85,11 +85,13 @@ public class SelectionParameters {
 		
 		if (this.lowDate == null)
 		{
-			this.lowDate = new Date(0000, 1, 1);
+			Date temp = new Date(0000, 1, 1);
+			this.lowDate = temp.toString();
 		}
 		if (this.highDate == null)
 		{
-			this.highDate = new Date(9999, 12, 30);	
+			Date temp = new Date(9999, 12, 30);
+			this.highDate = temp.toString();
 		}
 		
 		

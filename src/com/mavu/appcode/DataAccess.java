@@ -39,16 +39,13 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		this.responder = responder;
 	}
 	
-	public DataAccess(Context context, OnResponseListener responder){
-		this.responder = responder;
-	}
 	
-	public DataAccess(Context context, OnResponseListener responder, SelectionParameters parameters){
+	public DataAccess(OnResponseListener responder, SelectionParameters parameters){
 		this.responder = responder;
 		this.parameters = parameters;
 	}
 	
-	public DataAccess(Context context, OnResponseListener responder, Post postVals){
+	public DataAccess(OnResponseListener responder, Post postVals){
 		this.responder = responder;
 		this.postVals = postVals;
 	}
@@ -244,6 +241,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}
 			return true;
 		case 6:
+			//Get Posts
 			nameValuePair = new ArrayList<NameValuePair>(8);
 			nameValuePair.add(new BasicNameValuePair("action", "Get Posts"));
 			nameValuePair.add(new BasicNameValuePair("lowDate", parameters.getLowDate().toString()));

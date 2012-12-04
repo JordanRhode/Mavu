@@ -10,6 +10,7 @@ import com.mavu.appcode.DataAccess;
 import com.mavu.appcode.Post;
 import com.mavu.appcode.SelectionParameters;
 import com.mavu.appcode.ViewHolder;
+import com.mavu.appcode.DataAccess.OnResponseListener;
 
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,7 +43,8 @@ public class Home extends ListActivity {
 	private EditText searchOption;
 	private Resources resources;
 	private SelectionParameters parameters;
-	private DataAccess Da = new DataAccess();
+	private DataAccess Da;
+	private OnResponseListener responder;
 
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -304,13 +306,15 @@ public class Home extends ListActivity {
     	Time now = new Time();
     	now.setToNow();
     	
-    	@SuppressWarnings("deprecation")
-		Date lowDate = new Date(now.year, now.month, now.monthDay);
-    	@SuppressWarnings("deprecation")
-		Date HighDate = new Date(now.year, now.month, now.monthDay);
+    	//@SuppressWarnings("deprecation")
+		//Date lowDate = new Date(now.year, now.month, now.monthDay);
+    	//@SuppressWarnings("deprecation")
+		//Date HighDate = new Date(now.year, now.month, now.monthDay);
+    	String lowDate = "1000-01-01";
+    	String highDate = "9999-01-01";
     	
-    	parameters = new SelectionParameters(lowDate, HighDate, filter_city, filter_music_cat, filter_business_cat, filter_food_cat, "");
-    	parameters = new SelectionParameters(lowDate,HighDate,filter_city, filter_music_cat, filter_business_cat, filter_food_cat,"");
+    	parameters = new SelectionParameters(lowDate, highDate, filter_city, filter_music_cat, filter_business_cat, filter_food_cat, "");
+    	parameters = new SelectionParameters(lowDate,highDate,filter_city, filter_music_cat, filter_business_cat, filter_food_cat,"");
     	
     	Da.GetPosts(10, parameters);
     
