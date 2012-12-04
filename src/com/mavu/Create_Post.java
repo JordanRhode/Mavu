@@ -56,7 +56,7 @@ public class Create_Post extends Activity {
 				case R.id.save_post:
 					
 				//Retrieve next open ID from DataAccess class and assign to new Post
-		    		DataAccess da = new DataAccess();
+		    		//DataAccess da = new DataAccess();
 					
 		    	//Assign variables to pass
 					title = ((EditText) findViewById(R.id.txtTitle)).getText().toString();
@@ -80,8 +80,8 @@ public class Create_Post extends Activity {
 					
 					
 				//Create post
-					Post newPost = new Post(25, title, desc, category, address, city, time, theDate);
-					da.CreatePost(newPost);
+					//Post newPost = new Post(25, title, desc, category, address, city, time, theDate);
+					//da.CreatePost(newPost);
 					
 					Toast.makeText(getApplicationContext(),
 							 "Post successfully saved",

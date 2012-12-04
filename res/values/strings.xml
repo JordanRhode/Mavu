@@ -35,7 +35,7 @@
 	<string name="prefs_music_cat">Show Music</string>	 
 	<string name="prefs_food_cat">Show Food</string>
 	<string name="prefs_business_cat">Show Businesses</string>
-	
+	<string name="view_owner">View Owner</string>
 	<string-array name="searchOptions">
 		<item>By Title</item>
 		<item>By Date</item>

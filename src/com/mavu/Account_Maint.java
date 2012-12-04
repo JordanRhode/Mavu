@@ -145,7 +145,7 @@ public class Account_Maint extends Activity {
     	String confirmpassword = ((EditText) findViewById(R.id.txtConfirmPassword)).getText().toString();
     	
     	//Create DA object to use to save values to DB
-    	DataAccess da = new DataAccess();
+    	//DataAccess da = new DataAccess();
     	
     	if (password != confirmpassword)
     	{
@@ -159,18 +159,18 @@ public class Account_Maint extends Activity {
 					"Not all fields are filled out. Cannot save.",
 	                Toast.LENGTH_SHORT).show();
     	}
-    	else if (!da.EmailIsAvailable(email))
+    	/*else if (!da.EmailIsAvailable(email))
     	{
     		Toast.makeText(getApplicationContext(),
 					"This email is already being used on our server. Please enter a new email.",
 	                Toast.LENGTH_SHORT).show();
-    	}
+    	}*/
     	else //passed validation
     	{
     		//Need to get new Id if the account didnt exist before this
     		if (currentAccount.getAcccountId() < 1) //good enough? todo
     		{
-    			currentAccount.setAcccountId(da.GetNextAccountId());
+    			//currentAccount.setAcccountId(da.GetNextAccountId());
     		}
     		
     		currentAccount.setfName(fName);
@@ -178,7 +178,7 @@ public class Account_Maint extends Activity {
     		currentAccount.setEmail(email);
     		currentAccount.setPassword(confirmpassword);
     		//todo currentAccount.getDob();
-    		da.UpdateAccount(currentAccount);
+    		//da.UpdateAccount(currentAccount);
     		disableFields();    		
     	}
     

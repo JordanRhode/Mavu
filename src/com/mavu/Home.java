@@ -170,22 +170,23 @@ public class Home extends ListActivity {
     }
 
 
-	public void onListItemClick(ListView parent, View v, int position, long id) {
-		//Set the selected post
-	    CustomAdapter adapter = (CustomAdapter) parent.getAdapter();
-		Post selectedPost = adapter.getItem(position);
-		
-		Toast.makeText(getApplicationContext(),
-				selectedPost.toString(),
-                Toast.LENGTH_SHORT).show();
-		
-		//Pass the post to the post view intent
-		Intent intent = new Intent();
-		intent.setClass(this, Post_View.class);
-		intent.putExtra("SelectedPost", selectedPost.toString());
-		startActivity(intent);
+public void onListItemClick(ListView parent, View v, int position, long id) {
+	//Set the selected post
+    CustomAdapter adapter = (CustomAdapter) parent.getAdapter();
+	Post selectedPost = adapter.getItem(position);
+	
+	Toast.makeText(getApplicationContext(),
+			selectedPost.toString(),
+            Toast.LENGTH_SHORT).show();
+	
+	//Pass the post to the post view intent
 
-	}
+	Intent intent = new Intent();
+	intent.setClass(this, Post_View.class);
+	intent.putExtra("SelectedPost", selectedPost.toString());
+	startActivity(intent);
+
+}
 	
 	private class CustomAdapter extends ArrayAdapter<Post> {
 		//public CustomAdapter(Context context, int resource, int textViewResourceId, List<Post> objects) {
@@ -291,6 +292,7 @@ public class Home extends ListActivity {
 		}
 		else
 		{
+
 			int accountId = currentAccount.getAcccountId();	
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), Create_Post.class);

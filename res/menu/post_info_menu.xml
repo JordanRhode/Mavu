@@ -3,4 +3,9 @@
         android:title="@string/menu_settings"
         android:orderInCategory="100"
         android:showAsAction="never" />
+    <item android:id="@+id/view_owner"
+        android:title="@string/view_owner"
+        android:orderInCategory="100"
+        android:icon="@drawable/owner"
+        android:showAsAction="always" />
 </menu>
