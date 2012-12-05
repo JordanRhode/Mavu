@@ -6,10 +6,9 @@
     <item android:id="@+id/EditAccount"
         android:icon="@drawable/ic_menu_edit"
         android:title="@string/account_edit"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
     <item android:id="@+id/SaveAccount"
         android:icon="@drawable/ic_menu_save"
         android:title="@string/account_save"
-        android:visible="false"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always"/>
 </menu>

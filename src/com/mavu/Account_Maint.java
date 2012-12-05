@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.mavu.appcode.Account;
 import com.mavu.appcode.DataAccess;
+import com.mavu.appcode.DataAccess.OnResponseListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,6 +30,10 @@ public class Account_Maint extends Activity {
 	private EditText txtEmail;
 	private EditText txtPassword;
 	private EditText txtConfirmPassword;
+	private OnResponseListener responder;
+	private DataAccess Da;
+	private Menu menu;
+	private String mode;
 	
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
@@ -74,8 +79,8 @@ public class Account_Maint extends Activity {
         	txtEmail = ((EditText)findViewById(R.id.txtEmail));
         	txtEmail.setText(currentAccount.getEmail());
         	
-        	//EditText txtDOB = ((EditText)findViewById(R.id.txtDOB));
-        	//txtDOB.setText(currentAccount.getDob());
+        	EditText txtDOB = ((EditText)findViewById(R.id.txtDate));
+        	txtDOB.setText(currentAccount.getDob().toString());
         	
         	txtPassword = ((EditText)findViewById(R.id.txtPassword));
         	txtPassword.setText(currentAccount.getPassword());
@@ -93,6 +98,10 @@ public class Account_Maint extends Activity {
         	
         	disableFields();
         }
+        else
+        {
+        	mode = "edit";
+        }
 
         
         
@@ -103,10 +112,20 @@ public class Account_Maint extends Activity {
 	
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.account_maint_menu, menu);
+        this.menu = menu;
+        
+        if (mode.equals("Edit"))
+        {
+        	this.menu.removeItem(R.id.SaveAccount);
+        }
+        else
+        {
+        	this.menu.removeItem(R.id.EditAccount);
+        }
         return true;
     }
     
-    public boolean onMenuItemClick(MenuItem item) 
+    public boolean onOptionsItemSelected(MenuItem item) 
     {
     	switch (item.getItemId())
     	{
@@ -114,8 +133,6 @@ public class Account_Maint extends Activity {
     			Toast.makeText(getApplicationContext(),
     					"clicked edit account",
     	                Toast.LENGTH_SHORT).show();
-    			item.setEnabled(false);
-    			item.setVisible(false);
     			enableFields();
     			
     			break;
@@ -124,8 +141,6 @@ public class Account_Maint extends Activity {
     			Toast.makeText(getApplicationContext(),
     					"clicked save account",
     	                Toast.LENGTH_SHORT).show();
-    			item.setEnabled(false);
-    			item.setVisible(false);
     			saveFields();
     	
     	}  	
@@ -134,26 +149,16 @@ public class Account_Maint extends Activity {
     
     private void saveFields()
     {
-    	MenuItem editItem = (MenuItem) findViewById(R.id.SaveAccount);
-    	editItem.setEnabled(true);
-    	editItem.setVisible(true);
-    	
+
     	String fName = ((EditText) findViewById(R.id.txtFName)).getText().toString();
     	String lName = ((EditText) findViewById(R.id.txtLName)).getText().toString();
     	String email = ((EditText) findViewById(R.id.txtEmail)).getText().toString();
     	String password = ((EditText) findViewById(R.id.txtPassword)).getText().toString();
     	String confirmpassword = ((EditText) findViewById(R.id.txtConfirmPassword)).getText().toString();
-    	
+    	String dob = ((EditText) findViewById(R.id.txtDOB)).getText().toString();
     	//Create DA object to use to save values to DB
-    	//DataAccess da = new DataAccess();
     	
-    	if (password != confirmpassword)
-    	{
-    		Toast.makeText(getApplicationContext(),
-					"Passwords do not match. Please Try again",
-	                Toast.LENGTH_SHORT).show();
-    	}
-    	else if (fName == "" || lName == "" || email == "" || password == "" || confirmpassword == "")
+    	 if (fName.equals("") || lName.equals("") || email.equals("") || password.equals("") || confirmpassword.equals("") || dob.equals(""))
     	{
     		Toast.makeText(getApplicationContext(),
 					"Not all fields are filled out. Cannot save.",
@@ -165,20 +170,35 @@ public class Account_Maint extends Activity {
 					"This email is already being used on our server. Please enter a new email.",
 	                Toast.LENGTH_SHORT).show();
     	}*/
+    	else if (!password.equals(confirmpassword))
+    	{
+    		Toast.makeText(getApplicationContext(),
+					"Passwords do not match. Please Try again",
+	                Toast.LENGTH_SHORT).show();
+    	}
     	else //passed validation
     	{
-    		//Need to get new Id if the account didnt exist before this
-    		if (currentAccount.getAcccountId() < 1) //good enough? todo
-    		{
-    			//currentAccount.setAcccountId(da.GetNextAccountId());
-    		}
+    		
     		
     		currentAccount.setfName(fName);
     		currentAccount.setlName(lName);
     		currentAccount.setEmail(email);
     		currentAccount.setPassword(confirmpassword);
-    		//todo currentAccount.getDob();
-    		//da.UpdateAccount(currentAccount);
+    		//todo currentAccount.setDob(new Date(dob));
+    		
+     		//Need to get new Id if the account didnt exist before this
+    		if (currentAccount.getAcccountId() < 1) //good enough? todo
+    		{
+    			//currentAccount.setAcccountId(da.GetNextAccountId());
+    	        Da = new DataAccess(responder, currentAccount);
+    	        Da.execute("2");
+    		}
+    		else
+    		{
+    			//Update account
+    		    Da = new DataAccess(responder, currentAccount);
+    	        Da.execute("3");
+    		}
     		disableFields();    		
     	}
     
@@ -186,15 +206,13 @@ public class Account_Maint extends Activity {
     
     private void enableFields()
     {
-    	MenuItem saveItem = (MenuItem) findViewById(R.id.SaveAccount);
-    	saveItem.setEnabled(true);
-    	saveItem.setVisible(true);
     	
 	    txtFName.setEnabled(true);
 	    txtLName.setEnabled(true);
 	    txtEmail.setEnabled(true);
 	    txtPassword.setEnabled(true);
 	    txtConfirmPassword.setEnabled(true);
+	    mode = "edit";
     }
     
     private void disableFields()
@@ -204,7 +222,7 @@ public class Account_Maint extends Activity {
     	 txtEmail.setEnabled(false);
     	 txtPassword.setEnabled(false);
     	 txtConfirmPassword.setEnabled(false);
-    	
+    	mode = "read";
     }
 }
 

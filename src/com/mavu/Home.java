@@ -58,6 +58,7 @@ public class Home extends ListActivity {
 		//Maybe do a call to a local db to see if an account is stored..if so then pre fill the values to the logged in person
 		// assign currentAccount object
         currentAccount = new Account(); //todo...temp
+        //read prefs to get account???
         
         //Saturday morning....
         // 1.) Context menu for search
@@ -79,8 +80,9 @@ public class Home extends ListActivity {
          */
         
         //Temporarily going to setup our list view with dummy values
-        /*
-         * mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        
+        mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
+        
         	posts = new Vector<Post>();
         	Post post1 = new Post("1", "item1", "description1", "food","123 smith", "Stevens Point", "12:00", new Date(2012, 4, 6));
         	Post post2 = new Post("3", "item2", "description2", "business", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
@@ -89,11 +91,11 @@ public class Home extends ListActivity {
 	        posts.add(post1);
 	        posts.add(post2);
 	        posts.add(post3);
-         */
-        parameters = new SelectionParameters(null, null, "Stevens Point", true, true, true, null);
+         
+       /* parameters = new SelectionParameters(null, null, "Stevens Point", true, true, true, "");
         Da = new DataAccess(responder, parameters);
         Da.execute("6");
-        
+        */
         //, not sure what 2nd and 3rd parameter should be, maybe they need to be flipped
         //CustomAdapter adapter = new CustomAdapter(this, R.layout.custom_post_layout,R.id.postTitle, posts);
         CustomAdapter adapter = new CustomAdapter(this, android.R.id.list, posts);
@@ -130,15 +132,10 @@ public class Home extends ListActivity {
 @Override
     public boolean onOptionsItemSelected(MenuItem item) 
     {
-    	Toast.makeText(getApplicationContext(),
-				"clicked",
-                Toast.LENGTH_SHORT).show();
     	switch (item.getItemId())
     	{
     		case R.id.accountMenu:
-    			Toast.makeText(getApplicationContext(),
-    					"clicked account",
-    	                Toast.LENGTH_SHORT).show();
+
     			//Todo:
     			//Maybe do a call to a local db to see if an account is stored..if so then pre fill the values to the logged in person
     			// assign currentAccount object
@@ -170,23 +167,32 @@ public class Home extends ListActivity {
     }
 
 
-public void onListItemClick(ListView parent, View v, int position, long id) {
-	//Set the selected post
-    CustomAdapter adapter = (CustomAdapter) parent.getAdapter();
-	Post selectedPost = adapter.getItem(position);
+	public void onListItemClick(ListView parent, View v, int position, long id) {
+		//Set the selected post
+	    CustomAdapter adapter = (CustomAdapter) parent.getAdapter();
+		Post selectedPost = adapter.getItem(position);
+		
+		int accountId = 0;
+		accountId = currentAccount.getAcccountId();
+		
+		//Pass the post to the post view intent
+		String[] postInfo = new String[]
+				{
+					String.valueOf(accountId),
+					selectedPost.getTitle(),
+					selectedPost.getDesc(),
+					selectedPost.getCategory(),
+					selectedPost.getAddress(),
+					selectedPost.getCity(),
+					selectedPost.getTime(),
+					selectedPost.getDate().toString()
+				};
+		Intent intent = new Intent();
+		intent.setClass(this, Post_View.class);
+		intent.putExtra("postInfo", postInfo);
+		startActivity(intent);
 	
-	Toast.makeText(getApplicationContext(),
-			selectedPost.toString(),
-            Toast.LENGTH_SHORT).show();
-	
-	//Pass the post to the post view intent
-
-	Intent intent = new Intent();
-	intent.setClass(this, Post_View.class);
-	intent.putExtra("SelectedPost", selectedPost.toString());
-	startActivity(intent);
-
-}
+	}
 	
 	private class CustomAdapter extends ArrayAdapter<Post> {
 		//public CustomAdapter(Context context, int resource, int textViewResourceId, List<Post> objects) {
@@ -227,7 +233,10 @@ public void onListItemClick(ListView parent, View v, int position, long id) {
 
 			
 			date = holder.getDate();
-			date.setText("(" + post.getTime() + "-" + post.getDate() + ")");
+			Date tmpDate = post.getDate();
+			String tmpDateString = tmpDate.getMonth() + "/" + tmpDate.getDay() + "/" + tmpDate.getYear();
+					
+			date.setText("(" + post.getTime() + "-" + tmpDateString + ")");
 
 			description = holder.getDescription();		
 			description.setText(post.getDesc());
@@ -311,6 +320,14 @@ public void onListItemClick(ListView parent, View v, int position, long id) {
     {
     	super.onActivityResult(reqCode, resCode, data);
     	setOptionText();
+    	
+        //parameters is set in SetOPtionText
+    	/*todo: 
+    	posts.clear();
+    	
+        Da = new DataAccess(responder, parameters);
+        Da.execute("6");
+        */
     }
     
     private void setOptionText()

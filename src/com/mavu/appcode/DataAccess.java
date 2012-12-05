@@ -34,6 +34,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	private OnResponseListener responder;
 	private SelectionParameters parameters;
 	private Post postVals;
+	private Account account;
 	JSONObject jObj;
 	
 	public DataAccess(OnResponseListener responder){
@@ -50,6 +51,12 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		this.responder = responder;
 		this.postVals = postVals;
 	}
+	
+	public DataAccess(OnResponseListener responder, Account account){
+		this.responder = responder;
+		this.account = account;
+	}
+	
 	
 	@Override
 	protected Boolean doInBackground(String... params) {
@@ -117,12 +124,20 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		case 2:
 			//TODO Create Account
 			nameValuePair = new ArrayList<NameValuePair>(6);
-			nameValuePair.add(new BasicNameValuePair("action", "Create Account"));
+		/*	nameValuePair.add(new BasicNameValuePair("action", "Create Account"));
 			nameValuePair.add(new BasicNameValuePair("fname", params[1]));
 			nameValuePair.add(new BasicNameValuePair("lname", params[2]));
 			nameValuePair.add(new BasicNameValuePair("email", params[3]));
 			nameValuePair.add(new BasicNameValuePair("password", params[4]));
-			nameValuePair.add(new BasicNameValuePair("dob", params[5]));
+			nameValuePair.add(new BasicNameValuePair("dob", params[5]));*/
+			
+			nameValuePair = new ArrayList<NameValuePair>(6);
+			nameValuePair.add(new BasicNameValuePair("action", "Create Account"));
+			nameValuePair.add(new BasicNameValuePair("fname", account.getfName()));
+			nameValuePair.add(new BasicNameValuePair("lname", account.getlName()));
+			nameValuePair.add(new BasicNameValuePair("email", account.getEmail()));
+			nameValuePair.add(new BasicNameValuePair("password", account.getPassword()));
+			nameValuePair.add(new BasicNameValuePair("dob", account.getDob().toString()));
 			
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
@@ -143,13 +158,21 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		case 3:
 			//TODO update account
 			nameValuePair = new ArrayList<NameValuePair>(7);
-			nameValuePair.add(new BasicNameValuePair("action", "Update Account"));
+		/*	nameValuePair.add(new BasicNameValuePair("action", "Update Account"));
 			nameValuePair.add(new BasicNameValuePair("account_id", params[1]));
 			nameValuePair.add(new BasicNameValuePair("fname", params[2]));
 			nameValuePair.add(new BasicNameValuePair("lname", params[3]));
 			nameValuePair.add(new BasicNameValuePair("email", params[4]));
 			nameValuePair.add(new BasicNameValuePair("password", params[5]));
-			nameValuePair.add(new BasicNameValuePair("dob", params[6]));
+			nameValuePair.add(new BasicNameValuePair("dob", params[6])); */
+			
+			nameValuePair.add(new BasicNameValuePair("action", "Update Account"));
+			nameValuePair.add(new BasicNameValuePair("account_id", String.valueOf(account.getAcccountId())));
+			nameValuePair.add(new BasicNameValuePair("fname", account.getfName()));
+			nameValuePair.add(new BasicNameValuePair("lname", account.getlName()));
+			nameValuePair.add(new BasicNameValuePair("email", account.getEmail()));
+			nameValuePair.add(new BasicNameValuePair("password", account.getPassword()));
+			nameValuePair.add(new BasicNameValuePair("dob", account.getDob().toString()));
 			
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
@@ -243,15 +266,31 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			return true;
 		case 6:
 			//Get Posts
-			nameValuePair = new ArrayList<NameValuePair>(8);
+			nameValuePair = new ArrayList<NameValuePair>();
 			nameValuePair.add(new BasicNameValuePair("action", "Get Posts"));
 			nameValuePair.add(new BasicNameValuePair("lowDate", parameters.getLowDate().toString()));
 			nameValuePair.add(new BasicNameValuePair("highDate", parameters.getHighDate().toString()));
-			nameValuePair.add(new BasicNameValuePair("city", parameters.getCity().toString()));
-			nameValuePair.add(new BasicNameValuePair("music", parameters.getMusic_category().toString()));
-			nameValuePair.add(new BasicNameValuePair("business", parameters.getBusiness_category().toString()));
-			nameValuePair.add(new BasicNameValuePair("food", parameters.getFood_category().toString()));
-			nameValuePair.add(new BasicNameValuePair("title", parameters.getTitle().toString()));
+			
+			if (!parameters.getCity().equals(""))
+			{
+				nameValuePair.add(new BasicNameValuePair("city", parameters.getCity().toString()));
+			}
+			if (parameters.getMusic_category())
+			{
+				nameValuePair.add(new BasicNameValuePair("music", parameters.getMusic_category().toString()));
+			}
+			if (parameters.getFood_category())
+			{
+				nameValuePair.add(new BasicNameValuePair("food", parameters.getFood_category().toString()));
+			}
+			if (parameters.getBusiness_category())
+			{
+				nameValuePair.add(new BasicNameValuePair("business", parameters.getBusiness_category().toString()));
+			}
+			if (!parameters.getTitle().equals(""))
+			{
+				nameValuePair.add(new BasicNameValuePair("title", parameters.getTitle().toString()));
+			}
 			
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
@@ -293,6 +332,10 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		case 7:
 			//TODO get individual post
 			break;
+		case 8:
+			//TODO see if username is taken
+			break;
+
 		default:
 			return false;
 		}
