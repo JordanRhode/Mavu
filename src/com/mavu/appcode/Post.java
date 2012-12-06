@@ -11,10 +11,10 @@ public class Post {
 	private String category;
 	private String city;
 	private String time;
-	private Date date;
+	private String date;
 	private String address;
 	
-	public Post(String accountID, String title, String desc, String category, String address, String city, String time, Date date)
+	public Post(String accountID, String title, String desc, String category, String address, String city, String time, String date)
 	{
 		/*this.accountID = accountID;
 		this.postID = postID;
@@ -65,7 +65,7 @@ public class Post {
 	{
 		return this.time;
 	}
-	public Date getDate()
+	public String getDate()
 	{
 		return this.date;
 	}
@@ -102,7 +102,7 @@ public class Post {
 		this.time = time;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 

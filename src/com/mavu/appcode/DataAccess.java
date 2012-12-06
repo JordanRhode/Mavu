@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -25,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -35,7 +40,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	private SelectionParameters parameters;
 	private Post postVals;
 	private Account account;
-	JSONObject jObj;
+	private Vector<Post> posts;
 	
 	public DataAccess(OnResponseListener responder){
 		this.responder = responder;
@@ -74,6 +79,9 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		String json = "";
 		HttpClient httpClient;
 		HttpPost httpPost;
+
+		JSONObject jObj;
+		
 		
 		switch (Integer.parseInt(params[0])) {
 		case 1:
@@ -92,6 +100,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				HttpResponse response = httpClient.execute(httpPost);
 				HttpEntity entity = response.getEntity();
 				is = entity.getContent();
+				Log.i("entity", is.toString());
 			}	catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}	catch (ClientProtocolException e) {
@@ -106,20 +115,21 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				String line = null;
 				while ((line = reader.readLine()) != null) {
 					sb.append(line + "\n");
+					Log.i("data from server", line);
 				}
 				is.close();
 				json = sb.toString();
 			}	catch (Exception e) {
 				Log.e("Buffer Error", "Error converting result " + e.toString());
 			}
-			
+			/*
 			try {
 				JSONArray jArray = new JSONArray(json);
-				JSONObject jObj = jArray.getJSONObject(0);
+				//JSONObject jObj = jArray.getJSONObject(0);
 				//TODO put values in a shared preferences object
 			}	catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
-			}
+			}*/
 			return true;
 		case 2:
 			//TODO Create Account
@@ -293,7 +303,8 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}
 			
 			httpClient = new DefaultHttpClient();
-			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
+			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
+			
 			
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
@@ -311,20 +322,28 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			try {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"));
 				StringBuilder sb = new StringBuilder();
-				String line = null;
+				String line;
 				while ((line = reader.readLine()) != null) {
 					sb.append(line + "\n");
 				}
 				is.close();
 				json = sb.toString();
+				//Log.i("json data", json);
 			}	catch (Exception e) {
 				Log.e("Buffer Error", "Error converting result " + e.toString());
 			}
-			
+			posts = new Vector<Post>();
 			try {
+				
 				JSONArray jArray = new JSONArray(json);
-				jObj = jArray.getJSONObject(0);
-				//TODO make vector list of json data vals
+				Log.i("array leng", String.valueOf(jArray.length()));
+				for(int i=0; i<jArray.length(); i++)
+				{
+					jObj = jArray.getJSONObject(i);
+					Post post = new Post(jObj.get("post_id").toString(), jObj.getString("title"), jObj.getString("description"), jObj.getString("category"),jObj.getString("address"), jObj.getString("city"), jObj.getString("time"), jObj.get("date").toString());
+		        	posts.add(post);
+				}
+				
 			}	catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
 			}
@@ -339,7 +358,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		default:
 			return false;
 		}
-		return false;
+		return true;
 	}
 	
 	@Override
@@ -348,14 +367,14 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 //			this.progressDialog.dismiss();
 //		}
 		if(result)
-			responder.onSuccess("Success");
+			responder.onSuccess(posts);
 		else {
 			responder.onFailure("Fail");
 		}
 	}
 	
 	public interface OnResponseListener {
-		public void onSuccess(String message);
+		public void onSuccess(Vector<Post> posts);
 		public void onFailure(String message);
 	}
 }

@@ -39,7 +39,7 @@ import android.widget.Toast;
 
 public class Home extends ListActivity {
 
-	private Vector<Post> posts = new Vector<Post>();
+	private Vector<Post> posts;
 	private LayoutInflater mInflater;
 	private Account currentAccount;
 	private EditText searchOption;
@@ -82,8 +82,8 @@ public class Home extends ListActivity {
         //Temporarily going to setup our list view with dummy values
         
         mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-        
-        	posts = new Vector<Post>();
+        /*
+        	
         	Post post1 = new Post("1", "item1", "description1", "food","123 smith", "Stevens Point", "12:00", new Date(2012, 4, 6));
         	Post post2 = new Post("3", "item2", "description2", "business", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
         	Post post3 = new Post("2", "item3", "description2", "music", "222 jones", "Wausau", "12:00", new Date(2012, 4, 6));
@@ -91,16 +91,14 @@ public class Home extends ListActivity {
 	        posts.add(post1);
 	        posts.add(post2);
 	        posts.add(post3);
-         
-       /* parameters = new SelectionParameters(null, null, "Stevens Point", true, true, true, "");
-        Da = new DataAccess(responder, parameters);
+         */
+        parameters = new SelectionParameters(null, null, "Stevens Point", true, true, true, "");
+        Da = new DataAccess(onResponseListener, parameters);
         Da.execute("6");
-        */
+        
         //, not sure what 2nd and 3rd parameter should be, maybe they need to be flipped
         //CustomAdapter adapter = new CustomAdapter(this, R.layout.custom_post_layout,R.id.postTitle, posts);
-        CustomAdapter adapter = new CustomAdapter(this, android.R.id.list, posts);
-        setListAdapter(adapter);        
-        getListView().setTextFilterEnabled(true);
+        
         
        
 
@@ -116,12 +114,18 @@ public class Home extends ListActivity {
 				Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();
 			}
 
-			public void onSuccess() {
-				// TODO Auto-generated method stub
+
+			public void onSuccess(Vector<Post> posts) {
+				setPost(posts);
 				
 			}
 		};
-
+	private void setPost(Vector<Post> post1) {
+		this.posts = post1;
+		CustomAdapter adapter = new CustomAdapter(this, android.R.id.list, posts);
+        setListAdapter(adapter);        
+        getListView().setTextFilterEnabled(true);
+	}
 
 @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -233,10 +237,11 @@ public class Home extends ListActivity {
 
 			
 			date = holder.getDate();
-			Date tmpDate = post.getDate();
-			String tmpDateString = tmpDate.getMonth() + "/" + tmpDate.getDay() + "/" + tmpDate.getYear();
+			String tmpDate = post.getDate();
+			
+			//String tmpDateString = tmpDate.getMonth() + "/" + tmpDate.getDay() + "/" + tmpDate.getYear();
 					
-			date.setText("(" + post.getTime() + "-" + tmpDateString + ")");
+			date.setText("(" + post.getTime() + "-" + tmpDate + ")");
 
 			description = holder.getDescription();		
 			description.setText(post.getDesc());
@@ -348,11 +353,17 @@ public class Home extends ListActivity {
     	
     	Time now = new Time();
     	now.setToNow();
-    	
+    	/*
     	@SuppressWarnings("deprecation")
 		Date lowDate = new Date(now.year, now.month, now.monthDay);
     	@SuppressWarnings("deprecation")
 		Date highDate = new Date(now.year, now.month, now.monthDay);
+    	*/
+    	
+    	Integer lDate = now.year + now.month + now.monthDay;
+    	String lowDate = lDate.toString();
+    	Integer hDate = now.year + now.month + now.monthDay;
+    	String highDate = hDate.toString();
     	
     	parameters = new SelectionParameters(lowDate, highDate, filter_city, filter_music_cat, filter_business_cat, filter_food_cat, "");
     	parameters = new SelectionParameters(lowDate,highDate,filter_city, filter_music_cat, filter_business_cat, filter_food_cat,"");

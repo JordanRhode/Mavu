@@ -26,7 +26,7 @@ public class Post_View extends Activity {
         
         String[] postInfo = getIntent().getStringArrayExtra("postInfo");
         post = new Post(postInfo[0], 
-        		postInfo[1], postInfo[2], postInfo[3], postInfo[4], postInfo[5], postInfo[6], new Date(postInfo[7]));
+        		postInfo[1], postInfo[2], postInfo[3], postInfo[4], postInfo[5], postInfo[6], postInfo[7]);
         
     	//Assign variables to pass
 		 EditText title = ((EditText) findViewById(R.id.txtTitle));
