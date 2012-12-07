@@ -13,6 +13,6 @@
         android:showAsAction="always"/>
     <item android:id="@+id/menu_prefs"
         android:title="@string/prefs"
-        android:icon="@drawable/filter"
+        android:icon="@drawable/settings"
         android:showAsAction="always"/>
 </menu>

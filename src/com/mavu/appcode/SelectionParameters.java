@@ -60,8 +60,16 @@ public class SelectionParameters {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-
 	
+	
+	public String getAccountId() {
+		return accountName;
+	}
+
+	public void setAccountId(String accountName) { //Up to you how we should do this.. check first and last for anything like?
+		this.accountName = accountName;
+	}
+
 	private String lowDate;// --- if not specified then set to like 1900's 
 	private String highDate; //--- if not specified then set to like 9999's
 	private String city;
@@ -69,6 +77,7 @@ public class SelectionParameters {
 	private Boolean food_category;
 	private Boolean music_category;
 	private String title;
+	private String accountName;
 	
 
 	@SuppressWarnings("deprecation")

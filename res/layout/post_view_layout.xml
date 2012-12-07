@@ -4,10 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
         
       <TextView
         android:id="@+id/textView1"
@@ -29,13 +25,15 @@
           <requestFocus />
       </EditText>
         
-    </LinearLayout>
+
 
     
+	<!-- 
 	<LinearLayout
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:orientation="horizontal" >
+	    -->
 
     <TextView
         android:id="@+id/textView2"
@@ -53,14 +51,8 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     
-	</LinearLayout>
 
 
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
     
     <TextView
         android:id="@+id/textView3"
@@ -80,13 +72,6 @@
         android:text="ex: 01-01-2012" 
         android:enabled="false"/>
     
-	</LinearLayout>
-
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
     
     <TextView
         android:id="@+id/textView4"
@@ -109,13 +94,6 @@
         android:enabled="false" />
 
 
-	</LinearLayout>
-
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
     
     <TextView
         android:id="@+id/textView5"
@@ -134,14 +112,7 @@
         android:ems="10" 
         android:enabled="false"/>
     
-	</LinearLayout>
 
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
-    
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
@@ -159,15 +130,7 @@
         android:ems="10"
         android:inputType="textPostalAddress|textCapSentences"
         android:enabled="false" />
-    
-	</LinearLayout>
 
-
-
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
     
     <TextView
         android:id="@+id/textView7"
@@ -186,14 +149,8 @@
         android:inputType="textMultiLine|textCapSentences"
         android:enabled="false" />
 
-	</LinearLayout>
 
-	<LinearLayout
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal" >
-    
-	</LinearLayout>
+
 
 
 

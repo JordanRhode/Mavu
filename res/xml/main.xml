@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
-
+    <PreferenceCategory android:title="Account Preferences" >
+     <ListPreference
+	    android:key="@string/preferred_Account"
+	    android:title="@string/prefs_Acct_Summary"
+	    android:summary="@string/dialogTitle"
+	    android:entries="@array/possible_accounts_title"
+	    android:entryValues="@array/possible_accounts_values"
+	    android:dialogTitle="@string/dialogTitle"
+	    android:defaultValue="@string/sort_option_default_value"  />
+    </PreferenceCategory>
+    
+    
     <PreferenceCategory android:title="Filter Settings" >
         <EditTextPreference
             android:key="city"

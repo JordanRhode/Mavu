@@ -1,23 +1,17 @@
 package com.mavu;
 
-import java.util.Date;
-
 import com.mavu.appcode.Account;
 import com.mavu.appcode.DataAccess;
+import com.mavu.appcode.LocalAccountsDataSource;
 import com.mavu.appcode.DataAccess.OnResponseListener;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,10 +24,13 @@ public class Account_Maint extends Activity {
 	private EditText txtEmail;
 	private EditText txtPassword;
 	private EditText txtConfirmPassword;
+	private EditText txtDOB;
 	private OnResponseListener responder;
 	private DataAccess Da;
 	private Menu menu;
 	private String mode;
+	
+	private LocalAccountsDataSource datasource;
 	
 	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
@@ -54,6 +51,13 @@ public class Account_Maint extends Activity {
         // Create new account object. If an account is passed in then that means this phone has a user already created and it will load that account
         // and prefill the values
         
+        txtFName = ((EditText)findViewById(R.id.txtFName));   
+    	txtLName = ((EditText)findViewById(R.id.txtLName));  	
+    	txtEmail = ((EditText)findViewById(R.id.txtEmail));  	
+    	txtDOB = ((EditText)findViewById(R.id.txtDOB));
+    	txtPassword = ((EditText)findViewById(R.id.txtPassword));
+    	txtConfirmPassword = ((EditText)findViewById(R.id.txtConfirmPassword));
+    	
         // Start off with all the fields as read only. If the user hits the edit button on the menu then all fields will become active and they can update and save
     	currentAccount = new Account();
         if (getIntent().getStringArrayExtra("accountInfo") != null)
@@ -64,63 +68,60 @@ public class Account_Maint extends Activity {
         	currentAccount.setfName(accountInfo[1]);
         	currentAccount.setlName(accountInfo[2]);
         	currentAccount.setEmail(accountInfo[3]);
-        	currentAccount.setDob((java.sql.Date) new Date(accountInfo[4]));
+        	currentAccount.setDob(accountInfo[4]);
         	currentAccount.setPassword(accountInfo[5]);
         	currentAccount.setLikes(Integer.parseInt(accountInfo[6]));
         	currentAccount.setDislikes(Integer.parseInt(accountInfo[7]));
         	
         	
-            txtFName = ((EditText)findViewById(R.id.txtFName));
-        	txtFName.setText(currentAccount.getfName());
-        	
-        	txtLName = ((EditText)findViewById(R.id.txtLName));
+        	txtFName.setText(currentAccount.getfName());        	
         	txtLName.setText(currentAccount.getlName());
-        	
-        	txtEmail = ((EditText)findViewById(R.id.txtEmail));
-        	txtEmail.setText(currentAccount.getEmail());
-        	
-        	EditText txtDOB = ((EditText)findViewById(R.id.txtDate));
-        	txtDOB.setText(currentAccount.getDob().toString());
-        	
-        	txtPassword = ((EditText)findViewById(R.id.txtPassword));
+        	txtEmail.setText(currentAccount.getEmail());  	
+        	txtDOB.setText(currentAccount.getDob());
         	txtPassword.setText(currentAccount.getPassword());
-        	
-        	txtConfirmPassword = ((EditText)findViewById(R.id.txtConfirmPassword));
         	txtConfirmPassword.setText(currentAccount.getPassword());
         	
         	//Set the Title to show the user's name?
     	
         	/*The following fields will never be editable. Just to display likes and dislikes.*/
         	TextView lblLikes = ((TextView)findViewById(R.id.lblLikes));
-        	lblLikes.setText(currentAccount.getLikes());
+        	if (currentAccount.getLikes() > 0){
+        		lblLikes.setText(currentAccount.getLikes());
+        	}
         	TextView lblDislikes = ((TextView)findViewById(R.id.lblDislikes));
-        	lblDislikes.setText(currentAccount.getDislikes());
+        	if (currentAccount.getDislikes() > 0){
+        		lblDislikes.setText(currentAccount.getDislikes());
+        	}
         	
         	disableFields();
         }
         else
         {
         	mode = "edit";
+            Toast.makeText(getApplicationContext(),
+    				"No account was found. You must create a new Account",
+                    Toast.LENGTH_SHORT).show();
         }
 
         
         
-        Toast.makeText(getApplicationContext(),
-				"No account was found. You must create a new Account",
-                Toast.LENGTH_SHORT).show();
+
 	}
 	
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.account_maint_menu, menu);
         this.menu = menu;
         
+      //0 - edit 1- save
         if (mode.equals("Edit"))
         {
-        	this.menu.removeItem(R.id.SaveAccount);
+        	this.menu.getItem(0).setEnabled(false);
+        	this.menu.getItem(0).setVisible(false);
         }
         else
         {
-        	this.menu.removeItem(R.id.EditAccount);
+        	this.menu.getItem(1).setEnabled(false);
+        	this.menu.getItem(1).setVisible(false);
         }
         return true;
     }
@@ -134,6 +135,12 @@ public class Account_Maint extends Activity {
     					"clicked edit account",
     	                Toast.LENGTH_SHORT).show();
     			enableFields();
+    			//0 - edit 1- save
+    			this.menu.getItem(0).setEnabled(false);
+            	this.menu.getItem(0).setVisible(false);
+    			this.menu.getItem(1).setEnabled(true);
+            	this.menu.getItem(1).setVisible(true);
+
     			
     			break;
     			
@@ -141,6 +148,11 @@ public class Account_Maint extends Activity {
     			Toast.makeText(getApplicationContext(),
     					"clicked save account",
     	                Toast.LENGTH_SHORT).show();
+    			
+    			this.menu.getItem(1).setEnabled(false);
+            	this.menu.getItem(1).setVisible(false);
+    			this.menu.getItem(0).setEnabled(true);
+            	this.menu.getItem(0).setVisible(true);
     			saveFields();
     	
     	}  	
@@ -190,16 +202,29 @@ public class Account_Maint extends Activity {
     		if (currentAccount.getAcccountId() < 1) //good enough? todo
     		{
     			//currentAccount.setAcccountId(da.GetNextAccountId());
-    	        Da = new DataAccess(responder, currentAccount);
-    	        Da.execute("2");
+    			datasource = new LocalAccountsDataSource(this);
+    			datasource.open();
+    			datasource.createAccount(currentAccount);
+    	        //Da = new DataAccess(responder, currentAccount);
+    	        //Da.execute("2");
     		}
     		else
     		{
     			//Update account
-    		    Da = new DataAccess(responder, currentAccount);
-    	        Da.execute("3");
+    			datasource = new LocalAccountsDataSource(this);
+    			datasource.open();
+    			datasource.updateAccount(currentAccount);
+
+    		   // Da = new DataAccess(responder, currentAccount);
+    	       // Da.execute("3");
+    			
+    			Toast.makeText(getApplicationContext(),
+    					"updated account",
+    	                Toast.LENGTH_SHORT).show();
     		}
-    		disableFields();    		
+    		disableFields();
+       	 	
+        	//finish();
     	}
     
     }
@@ -212,6 +237,7 @@ public class Account_Maint extends Activity {
 	    txtEmail.setEnabled(true);
 	    txtPassword.setEnabled(true);
 	    txtConfirmPassword.setEnabled(true);
+	    txtDOB.setEnabled(true);
 	    mode = "edit";
     }
     
@@ -222,7 +248,11 @@ public class Account_Maint extends Activity {
     	 txtEmail.setEnabled(false);
     	 txtPassword.setEnabled(false);
     	 txtConfirmPassword.setEnabled(false);
+    	 txtDOB.setEnabled(false);
+
     	mode = "read";
+    	
+
     }
 }
 

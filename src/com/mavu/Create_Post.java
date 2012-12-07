@@ -66,8 +66,7 @@ public class Create_Post extends Activity {
 					city = ((EditText) findViewById(R.id.txtCity)).getText().toString();
 					time = ((EditText) findViewById(R.id.txtTime)).getText().toString();
 					
-					
-				//Date setting
+					//Date setting
 					String date = ((EditText) findViewById(R.id.txtDate)).getText().toString();
 					
 					try {
@@ -78,16 +77,28 @@ public class Create_Post extends Activity {
 						e.printStackTrace();
 					}
 					
+					if (title.equals("") || desc.equals("") || category.equals("") || address.equals("") || city.equals("") || time.equals(""))
+					{
+						Toast.makeText(getApplicationContext(),
+								 "Please fill in all the values",
+								 Toast.LENGTH_SHORT).show();
+					}
+					else
+					{
+						//Create post - accountId
+						//Post newPost = new Post(25, title, desc, category, address, city, time, theDate);
+						//da.CreatePost(newPost);
+						
+						Toast.makeText(getApplicationContext(),
+								 "Post successfully saved",
+								 Toast.LENGTH_SHORT).show();
+						
+						this.finish();
+					}
+
 					
-				//Create post
-					//Post newPost = new Post(25, title, desc, category, address, city, time, theDate);
-					//da.CreatePost(newPost);
 					
-					Toast.makeText(getApplicationContext(),
-							 "Post successfully saved",
-							 Toast.LENGTH_SHORT).show();
-					
-					this.finish();
+
 					
 				break;
 

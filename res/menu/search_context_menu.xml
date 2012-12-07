@@ -1,15 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/menu_settings"
-        android:title="@string/menu_settings"
+ 
+    <item android:id="@+id/search_byTitle"
+        android:title="By Event Title"
         android:orderInCategory="100"
-        android:showAsAction="never" />
-    <item android:id="@+id/EditAccount"
-        android:icon="@drawable/ic_menu_edit"
-        android:title="@string/account_edit"
-        android:showAsAction="ifRoom"/>
-    <item android:id="@+id/SaveAccount"
-        android:icon="@drawable/ic_menu_save"
-        android:title="@string/account_save"
-        android:visible="false"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="always" />
+    <item android:id="@+id/search_byAccount"
+        android:title="By Account Name"
+        android:showAsAction="always"/>
+    <item android:id="@+id/search_byDate"
+        android:title="By Date"
+        android:showAsAction="always"/>
 </menu>

@@ -5,4 +5,16 @@
         <item>Business</item>
         <item>Music</item>
     </string-array>
+    
+     <string-array name="possible_accounts_title">
+        <item>Food</item>
+        <item>Business</item>
+        <item>Music</item>
+    </string-array>
+    
+    <string-array name="possible_accounts_values">
+        <item>Food</item>
+        <item>Business</item>
+        <item>Music</item>
+    </string-array>
 </resources>

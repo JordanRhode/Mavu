@@ -22,11 +22,12 @@
 	<string name="aDislikes">Dislikes</string>	
 	<string name="btnViewPosts">View Posts</string>	
 	
+	<string name="preferred_Account">prefs_account_key</string>
 	<string name="prefTitle">Filters</string>
     <string name="prefSummary">Set your Post Result Filters</string>
-    <string name="flight_sort_option_default_value">1</string>
-    <string name="dialogTitle">Choose Filter Options</string>
-    <string name="listSummary">Set Search Options</string>
+    <string name="sort_option_default_value">1</string>
+    <string name="dialogTitle">Choose Local Preferred Account</string>
+    <string name="prefs_Acct_Summary">Preferred Account</string>
     <string name="menu_prefs_title">Settings</string>
     <string name="menu_quit_title">Quit</string>
 	<string name="prefs">Filters</string>	

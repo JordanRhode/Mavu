@@ -38,11 +38,11 @@ public class Account {
 		this.email = email;
 	}
 
-	public Date getDob() {
+	public String getDob() {
 		return dob;
 	}
 
-	public void setDob(Date dob) {
+	public void setDob(String dob) {
 		this.dob = dob;
 	}
 
@@ -74,7 +74,7 @@ public class Account {
 	private String fName;
 	private String lName;
 	private String email;
-	private Date dob;
+	private String dob;
 	private String password;
 	private int likes;
 	private int dislikes;

@@ -11,6 +11,7 @@ public class ViewHolder {
 	    private TextView description = null;
 	    private TextView title = null;
 	    private TextView date = null;
+	    private TextView time = null;
 	    private ImageView image = null;
 
 		public ViewHolder(View row) {
@@ -37,6 +38,14 @@ public class ViewHolder {
 			}
 			return date;
 		} 
+		
+		public TextView getTime() {
+			if(null == time){
+				time = (TextView) mRow.findViewById(R.id.postTime);
+			}
+			return time;
+		} 
+		
 		
 		public ImageView getImage() {
 			if(null == image){
