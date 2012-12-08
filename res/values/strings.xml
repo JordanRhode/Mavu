@@ -30,7 +30,7 @@
     <string name="prefs_Acct_Summary">Preferred Account</string>
     <string name="menu_prefs_title">Settings</string>
     <string name="menu_quit_title">Quit</string>
-	<string name="prefs">Filters</string>	
+	<string name="prefs">Settings</string>	
 	<string name="prefs_city">City</string>	
 	<string name="prefs_category">Category</string>	
 	<string name="prefs_music_cat">Show Music</string>	 

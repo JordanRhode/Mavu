@@ -358,12 +358,15 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				case 2: //Create Account - we want to return the account so that we can get the newly assigned account Id
 					responder.onSuccess(account);
 					break;
-				case 4: //Get Account
+				case 4: //Get Account (By Id)
 					responder.onSuccess(account);
 					break;
 				case 6: 
 					responder.onSuccess(posts);
-					break;			
+					break;	
+				case 8: //Get Account (By Email)
+					responder.onSuccess(account);
+					break;
 			}
 			
 		}

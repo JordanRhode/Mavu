@@ -140,11 +140,6 @@
 	        android:layout_height="wrap_content"></TextView>
       </LinearLayout>
 
-   	<Button
-	        android:id="@+id/btnViewPosts"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:text="@string/btnViewPosts" />
 	   
 
 

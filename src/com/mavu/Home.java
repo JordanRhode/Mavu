@@ -84,9 +84,9 @@ public class Home extends ListActivity {
     	{
 	    	datasource = new LocalAccountsDataSource(this);
 	    	datasource.open();
-	    	currentAccount = datasource.getAccount(accountEmail);
+	    	currentAccount = datasource.getAccount(accountEmail); //we will only use this to use the email to get the account
 	    	
-	    	//todo: when we have it set up, call the actual get account from the server.
+	    	//todo: when we have it set up, call the actual get account from the server... we wont use the code thats currently above
 	    	//Da = new DataAccess(Home.this, onResponseListener, "Loading...", parameters);
 	        //Da.execute("8");
     	}

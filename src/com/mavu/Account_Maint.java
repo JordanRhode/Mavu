@@ -1,12 +1,18 @@
 package com.mavu;
 
+import java.util.ArrayList;
+
 import com.mavu.appcode.Account;
 import com.mavu.appcode.DataAccess;
 import com.mavu.appcode.LocalAccountsDataSource;
 import com.mavu.appcode.DataAccess.OnResponseListener;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.preference.ListPreference;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,6 +35,7 @@ public class Account_Maint extends Activity {
 	private DataAccess Da;
 	private Menu menu;
 	private String mode;
+	private Resources resources;
 	
 	private LocalAccountsDataSource datasource;
 	
@@ -36,7 +43,7 @@ public class Account_Maint extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_maint_layout);
-              
+       /*       
         final Button button = (Button) findViewById(R.id.btnViewPosts);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -45,7 +52,7 @@ public class Account_Maint extends Activity {
         				"You clicked the button!t",
                         Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
         
         // Create new account object. If an account is passed in then that means this phone has a user already created and it will load that account
@@ -192,7 +199,14 @@ public class Account_Maint extends Activity {
     	else //passed validation
     	{
     		
-    		
+			this.menu.getItem(1).setEnabled(false);
+        	this.menu.getItem(1).setVisible(false);
+			this.menu.getItem(0).setEnabled(true);
+        	this.menu.getItem(0).setVisible(true);
+        	mode = "read";
+        	
+	       
+	         
     		currentAccount.setfName(fName);
     		currentAccount.setlName(lName);
     		currentAccount.setEmail(email);
@@ -211,15 +225,15 @@ public class Account_Maint extends Activity {
     		}
     		else
     		{
-    			this.menu.getItem(1).setEnabled(false);
-            	this.menu.getItem(1).setVisible(false);
-    			this.menu.getItem(0).setEnabled(true);
-            	this.menu.getItem(0).setVisible(true);
+
             	
     			//Update account
     			datasource = new LocalAccountsDataSource(this);
     			datasource.open();
     			datasource.updateAccount(currentAccount);
+    			
+    			//Update app preferred account to the current one
+
 
     		   // Da = new DataAccess(responder, currentAccount);
     	       // Da.execute("3");
