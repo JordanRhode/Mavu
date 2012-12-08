@@ -112,16 +112,20 @@ public class Account_Maint extends Activity {
         getMenuInflater().inflate(R.menu.account_maint_menu, menu);
         this.menu = menu;
         
-      //0 - edit 1- save
-        if (mode.equals("Edit"))
+        //0 - edit 1- save
+        if (mode.equals("edit"))
         {
         	this.menu.getItem(0).setEnabled(false);
         	this.menu.getItem(0).setVisible(false);
+        	this.menu.getItem(1).setEnabled(true);
+        	this.menu.getItem(1).setVisible(true);
         }
         else
         {
         	this.menu.getItem(1).setEnabled(false);
         	this.menu.getItem(1).setVisible(false);
+        	this.menu.getItem(0).setEnabled(true);
+        	this.menu.getItem(0).setVisible(true);
         }
         return true;
     }
@@ -149,10 +153,7 @@ public class Account_Maint extends Activity {
     					"clicked save account",
     	                Toast.LENGTH_SHORT).show();
     			
-    			this.menu.getItem(1).setEnabled(false);
-            	this.menu.getItem(1).setVisible(false);
-    			this.menu.getItem(0).setEnabled(true);
-            	this.menu.getItem(0).setVisible(true);
+
     			saveFields();
     	
     	}  	
@@ -210,6 +211,11 @@ public class Account_Maint extends Activity {
     		}
     		else
     		{
+    			this.menu.getItem(1).setEnabled(false);
+            	this.menu.getItem(1).setVisible(false);
+    			this.menu.getItem(0).setEnabled(true);
+            	this.menu.getItem(0).setVisible(true);
+            	
     			//Update account
     			datasource = new LocalAccountsDataSource(this);
     			datasource.open();

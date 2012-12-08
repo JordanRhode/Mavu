@@ -44,7 +44,6 @@ public class Home extends ListActivity {
 	private Vector<Post> posts;
 	private LayoutInflater mInflater;
 	private Account currentAccount;
-	private EditText searchOption;
 	private Resources resources;
 	private SelectionParameters parameters;
 	private DataAccess Da;
@@ -88,11 +87,18 @@ public class Home extends ListActivity {
 	    	currentAccount = datasource.getAccount(accountEmail);
 	    	
 	    	//todo: when we have it set up, call the actual get account from the server.
+	    	//Da = new DataAccess(Home.this, onResponseListener, "Loading...", parameters);
+	        //Da.execute("8");
     	}
     	else
     	{
-    		currentAccount = null; //TODO...temp
+    		currentAccount = null; 
     	}
+    	
+    	//Get the search bar and then hide it. It is only displayed on search click
+    	txtSearch = ((EditText)findViewById(R.id.searchText));
+    	
+    	
 
         mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
@@ -104,6 +110,17 @@ public class Home extends ListActivity {
 
     }
 	
+	@Override
+	protected void onResume()
+	{
+		if (txtSearch != null)
+		{
+			txtSearch.setVisibility(View.GONE);
+		}
+		super.onResume();
+
+	}
+	
 	protected OnResponseListener onResponseListener = new OnResponseListener() {
 				
 			public void onFailure(String message) {
@@ -113,7 +130,10 @@ public class Home extends ListActivity {
 
 			public void onSuccess(Vector<Post> posts) {
 				setPost(posts);
-				
+			}
+			
+			public void onSuccess(Account account) {
+				setAccount(account);
 			}
 		};
 	private void setPost(Vector<Post> post1) {
@@ -122,12 +142,16 @@ public class Home extends ListActivity {
         setListAdapter(adapter);        
         getListView().setTextFilterEnabled(true);
 	}
+	
+	private void setAccount(Account account) {
+		this.currentAccount = account;
+	}
 
 @Override
 	public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
         this.menu = menu;
-        if (currentAccount != null && !currentAccount.getEmail().equals(""))
+        if (currentAccount != null && currentAccount.getEmail() != null && !currentAccount.getEmail().equals(""))
         {
         	updateCreatePostEnabledStatus(true);
         }
@@ -188,7 +212,7 @@ public class Home extends ListActivity {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    
 	    //Show the search text box
-		txtSearch = ((EditText)findViewById(R.id.searchText));
+		//txtSearch = ((EditText)findViewById(R.id.searchText));
     	txtSearch.setVisibility(View.VISIBLE);
     	txtSearch.setFocusable(true);
     	//txtSearch.setHeight(10); //todo
@@ -260,13 +284,11 @@ public class Home extends ListActivity {
 	    CustomAdapter adapter = (CustomAdapter) parent.getAdapter();
 		Post selectedPost = adapter.getItem(position);
 		
-		int accountId = 0;
-		accountId = currentAccount.getAcccountId();
-		
+
 		//Pass the post to the post view intent
 		String[] postInfo = new String[]
 				{
-					String.valueOf(accountId),
+					String.valueOf(selectedPost.getAccountID()),
 					selectedPost.getTitle(),
 					selectedPost.getDesc(),
 					selectedPost.getCategory(),

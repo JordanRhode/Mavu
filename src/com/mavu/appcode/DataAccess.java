@@ -36,6 +36,8 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	private Account account;
 	private Vector<Post> posts;
 	
+	private int currentAction;
+	
 	public DataAccess(android.app.ProgressDialog progressDialog,OnResponseListener responder){
 		this.responder = responder;
 		this.progressDialog = progressDialog;
@@ -72,10 +74,11 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		 * case 1: Login
 		 * case 2: Create Account
 		 * case 3: Update Account
-		 * case 4: Get Account
+		 * case 4: Get Account (By account Id)
 		 * case 5: Create Post
 		 * case 6: Get Posts
-		 * case 7: Get Individual Post
+		 * case 7: See if account username is taken
+		 * case 8: Get Account (By email)
 		 */
 		List<NameValuePair> nameValuePair;
 		InputStream is = null;
@@ -85,7 +88,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 
 		JSONObject jObj;
 		
-		
+		currentAction = Integer.parseInt(params[0]);
 		switch (Integer.parseInt(params[0])) {
 		case 1:
 			//TODO Login
@@ -334,9 +337,6 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}
 			return true;
 		case 7:
-			//TODO get individual post
-			break;
-		case 8:
 			//TODO see if username is taken
 			break;
 
@@ -352,7 +352,21 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			this.progressDialog.dismiss();
 		}
 		if(result)
-			responder.onSuccess(posts);
+		{
+			switch (currentAction)
+			{
+				case 2: //Create Account - we want to return the account so that we can get the newly assigned account Id
+					responder.onSuccess(account);
+					break;
+				case 4: //Get Account
+					responder.onSuccess(account);
+					break;
+				case 6: 
+					responder.onSuccess(posts);
+					break;			
+			}
+			
+		}
 		else {
 			responder.onFailure("Fail");
 		}
@@ -360,6 +374,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	
 	public interface OnResponseListener {
 		public void onSuccess(Vector<Post> posts);
+		public void onSuccess(Account account);
 		public void onFailure(String message);
 	}
 	
