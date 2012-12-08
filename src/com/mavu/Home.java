@@ -104,7 +104,7 @@ public class Home extends ListActivity {
 
         parameters = new SelectionParameters(null, null, "Stevens Point", filter_music_cat, filter_business_cat, filter_food_cat, "");
         
-        Da = new DataAccess(Home.this, onResponseListener, "Loading...", parameters);
+        Da = new DataAccess(Home.this, onResponseListener, parameters);
         Da.execute("6");
        
 
@@ -275,7 +275,7 @@ public class Home extends ListActivity {
 			      getApplicationContext().INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(txtSearch.getWindowToken(), 0);
 		
-		 Da = new DataAccess(Home.this, onResponseListener, "Loading...", parameters);
+		 Da = new DataAccess(Home.this, onResponseListener, parameters);
 	     Da.execute("6");
 	}
 
@@ -406,7 +406,7 @@ public class Home extends ListActivity {
 		intent.setClass(this, Account_Maint.class);
 		//intent.setClass(getApplicationContext());
 		
-		if (currentAccount != null && !currentAccount.getEmail().equals(""))
+		if (currentAccount != null && currentAccount.getEmail() != null && !currentAccount.getEmail().equals(""))
 		{
 			String[] accountInfo = new String[]{String.valueOf(currentAccount.getAcccountId()),
 												currentAccount.getfName(),

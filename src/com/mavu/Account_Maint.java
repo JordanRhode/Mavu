@@ -1,10 +1,12 @@
 package com.mavu;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 import com.mavu.appcode.Account;
 import com.mavu.appcode.DataAccess;
 import com.mavu.appcode.LocalAccountsDataSource;
+import com.mavu.appcode.Post;
 import com.mavu.appcode.DataAccess.OnResponseListener;
 
 import android.app.Activity;
@@ -211,23 +213,20 @@ public class Account_Maint extends Activity {
     		currentAccount.setlName(lName);
     		currentAccount.setEmail(email);
     		currentAccount.setPassword(confirmpassword);
-    		//todo currentAccount.setDob(new Date(dob));
+    		//TODO currentAccount.setDob(new Date(dob));
     		
      		//Need to get new Id if the account didnt exist before this
     		if (currentAccount.getAcccountId() < 1) //good enough? todo
     		{
-    			//currentAccount.setAcccountId(da.GetNextAccountId());
-    			datasource = new LocalAccountsDataSource(this);
-    			datasource.open();
-    			datasource.createAccount(currentAccount);
-    	        //Da = new DataAccess(responder, currentAccount);
-    	        //Da.execute("2");
+    			//TODO create account
+    	        Da = new DataAccess(this, onResponseListener, currentAccount);
+    	        Da.execute("2");
     		}
     		else
     		{
 
             	
-    			//Update account
+    			//TODO Update account
     			datasource = new LocalAccountsDataSource(this);
     			datasource.open();
     			datasource.updateAccount(currentAccount);
@@ -248,6 +247,25 @@ public class Account_Maint extends Activity {
     	}
     
     }
+    
+    protected OnResponseListener onResponseListener = new OnResponseListener() {
+		
+		public void onFailure(String message) {
+			Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();
+		}
+
+		public void onSuccess(Account account) {
+			
+			//currentAccount.setAcccountId(da.GetNextAccountId());
+			//datasource = new LocalAccountsDataSource(this);
+			//datasource.open();
+			//datasource.createAccount(currentAccount);
+		}
+
+		public void onSuccess(Vector<Post> posts) {
+			
+		}
+	};
     
     private void enableFields()
     {

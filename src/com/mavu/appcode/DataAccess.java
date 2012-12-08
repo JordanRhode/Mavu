@@ -44,22 +44,22 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	}
 	
 	
-	public DataAccess(Context context, OnResponseListener responder, String progressMessage, SelectionParameters parameters){
+	public DataAccess(Context context, OnResponseListener responder, SelectionParameters parameters){
 		this.responder = responder;
 		this.parameters = parameters;
-		this.progressDialog = new ProgressDialog(context, progressMessage);
+		this.progressDialog = new ProgressDialog(context, "Loading...");
 	}
 	
-	public DataAccess(Context context, OnResponseListener responder, String progressMessage, Post postVals){
+	public DataAccess(Context context, OnResponseListener responder, Post postVals){
 		this.responder = responder;
 		this.postVals = postVals;
-		this.progressDialog = new ProgressDialog(context, progressMessage);
+		this.progressDialog = new ProgressDialog(context, "Loading...");
 	}
 	
-	public DataAccess(Context context, OnResponseListener responder, String progressMessage, Account account){
+	public DataAccess(Context context, OnResponseListener responder, Account account){
 		this.responder = responder;
 		this.account = account;
-		this.progressDialog = new ProgressDialog(context, progressMessage);
+		this.progressDialog = new ProgressDialog(context, "Loading...");
 	}
 	
 	@Override
@@ -143,7 +143,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("lname", account.getlName()));
 			nameValuePair.add(new BasicNameValuePair("email", account.getEmail()));
 			nameValuePair.add(new BasicNameValuePair("password", account.getPassword()));
-			nameValuePair.add(new BasicNameValuePair("dob", account.getDob().toString()));
+			nameValuePair.add(new BasicNameValuePair("dob", account.getDob()));
 			
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
@@ -380,7 +380,6 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		public void onSuccess(Account account);
 		public void onFailure(String message);
 	}
-	
 	public class ProgressDialog extends android.app.ProgressDialog {
 		public ProgressDialog(Context context, String progressMessage){
 			super(context);
