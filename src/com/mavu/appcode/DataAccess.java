@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
@@ -18,10 +16,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONArray;
@@ -29,37 +24,45 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	
-
+	private android.app.ProgressDialog progressDialog;
 	private OnResponseListener responder;
 	private SelectionParameters parameters;
 	private Post postVals;
 	private Account account;
 	private Vector<Post> posts;
 	
-	public DataAccess(OnResponseListener responder){
+	public DataAccess(android.app.ProgressDialog progressDialog,OnResponseListener responder){
 		this.responder = responder;
+		this.progressDialog = progressDialog;
 	}
 	
 	
-	public DataAccess(OnResponseListener responder, SelectionParameters parameters){
+	public DataAccess(Context context, OnResponseListener responder, String progressMessage, SelectionParameters parameters){
 		this.responder = responder;
 		this.parameters = parameters;
+		this.progressDialog = new ProgressDialog(context, progressMessage);
 	}
 	
-	public DataAccess(OnResponseListener responder, Post postVals){
+	public DataAccess(Context context, OnResponseListener responder, String progressMessage, Post postVals){
 		this.responder = responder;
 		this.postVals = postVals;
+		this.progressDialog = new ProgressDialog(context, progressMessage);
 	}
 	
-	public DataAccess(OnResponseListener responder, Account account){
+	public DataAccess(Context context, OnResponseListener responder, String progressMessage, Account account){
 		this.responder = responder;
 		this.account = account;
+		this.progressDialog = new ProgressDialog(context, progressMessage);
+	}
+	
+	@Override
+	protected void onPreExecute(){
+		progressDialog.show();
 	}
 	
 	
@@ -93,14 +96,13 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("password", params[2]));
 			
 			httpClient = new DefaultHttpClient();
-			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
+			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
 			
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
 				HttpResponse response = httpClient.execute(httpPost);
 				HttpEntity entity = response.getEntity();
 				is = entity.getContent();
-				Log.i("entity", is.toString());
 			}	catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}	catch (ClientProtocolException e) {
@@ -115,7 +117,6 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				String line = null;
 				while ((line = reader.readLine()) != null) {
 					sb.append(line + "\n");
-					Log.i("data from server", line);
 				}
 				is.close();
 				json = sb.toString();
@@ -134,14 +135,6 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		case 2:
 			//TODO Create Account
 			nameValuePair = new ArrayList<NameValuePair>(6);
-		/*	nameValuePair.add(new BasicNameValuePair("action", "Create Account"));
-			nameValuePair.add(new BasicNameValuePair("fname", params[1]));
-			nameValuePair.add(new BasicNameValuePair("lname", params[2]));
-			nameValuePair.add(new BasicNameValuePair("email", params[3]));
-			nameValuePair.add(new BasicNameValuePair("password", params[4]));
-			nameValuePair.add(new BasicNameValuePair("dob", params[5]));*/
-			
-			nameValuePair = new ArrayList<NameValuePair>(6);
 			nameValuePair.add(new BasicNameValuePair("action", "Create Account"));
 			nameValuePair.add(new BasicNameValuePair("fname", account.getfName()));
 			nameValuePair.add(new BasicNameValuePair("lname", account.getlName()));
@@ -150,7 +143,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("dob", account.getDob().toString()));
 			
 			httpClient = new DefaultHttpClient();
-			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
+			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
 			
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
@@ -168,14 +161,6 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		case 3:
 			//TODO update account
 			nameValuePair = new ArrayList<NameValuePair>(7);
-		/*	nameValuePair.add(new BasicNameValuePair("action", "Update Account"));
-			nameValuePair.add(new BasicNameValuePair("account_id", params[1]));
-			nameValuePair.add(new BasicNameValuePair("fname", params[2]));
-			nameValuePair.add(new BasicNameValuePair("lname", params[3]));
-			nameValuePair.add(new BasicNameValuePair("email", params[4]));
-			nameValuePair.add(new BasicNameValuePair("password", params[5]));
-			nameValuePair.add(new BasicNameValuePair("dob", params[6])); */
-			
 			nameValuePair.add(new BasicNameValuePair("action", "Update Account"));
 			nameValuePair.add(new BasicNameValuePair("account_id", String.valueOf(account.getAcccountId())));
 			nameValuePair.add(new BasicNameValuePair("fname", account.getfName()));
@@ -185,7 +170,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("dob", account.getDob().toString()));
 			
 			httpClient = new DefaultHttpClient();
-			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
+			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
 			
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
@@ -207,7 +192,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("account_id", params[1]));
 			
 			httpClient = new DefaultHttpClient();
-			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
+			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
 			
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
@@ -259,7 +244,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			//nameValuePair.add(new BasicNameValuePair("zipcode", postVals.getZip()));
 
 			httpClient = new DefaultHttpClient();
-			httpPost = new HttpPost("http://www.mavu.jordanrhode.com/user_actions.php");	
+			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
 			
 			try {
 				httpPost.setEntity(new UrlEncodedFormEntity(nameValuePair));
@@ -363,9 +348,9 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	
 	@Override
 	protected void onPostExecute(Boolean result){
-//		if(this.progressDialog.isShowing()) {
-//			this.progressDialog.dismiss();
-//		}
+		if(this.progressDialog.isShowing()) {
+			this.progressDialog.dismiss();
+		}
 		if(result)
 			responder.onSuccess(posts);
 		else {
@@ -376,5 +361,13 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	public interface OnResponseListener {
 		public void onSuccess(Vector<Post> posts);
 		public void onFailure(String message);
+	}
+	
+	public class ProgressDialog extends android.app.ProgressDialog {
+		public ProgressDialog(Context context, String progressMessage){
+			super(context);
+			setCancelable(false);
+			setMessage(progressMessage);
+		}
 	}
 }

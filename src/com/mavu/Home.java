@@ -1,10 +1,8 @@
 package com.mavu;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
-import org.json.JSONObject;
 
 
 import com.mavu.appcode.Account;
@@ -15,12 +13,8 @@ import com.mavu.appcode.SelectionParameters;
 import com.mavu.appcode.ViewHolder;
 import com.mavu.appcode.DataAccess.OnResponseListener;
 
-import android.R.menu;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.annotation.SuppressLint;
-import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
@@ -54,7 +48,6 @@ public class Home extends ListActivity {
 	private Resources resources;
 	private SelectionParameters parameters;
 	private DataAccess Da;
-	private OnResponseListener responder;
 	private Menu menu;
 	
 	
@@ -84,9 +77,9 @@ public class Home extends ListActivity {
     	        resources.getString(R.string.sort_option_default_value));
     	
         filter_city = preferences.getString("city", "n/a");
-    	filter_music_cat = preferences.getBoolean("music_cat", false);
-    	filter_business_cat = preferences.getBoolean("business_cat", false);
-    	filter_food_cat = preferences.getBoolean("food_cat", false);
+    	filter_music_cat = preferences.getBoolean("music_cat", true);
+    	filter_business_cat = preferences.getBoolean("business_cat", true);
+    	filter_food_cat = preferences.getBoolean("food_cat", true);
 
     	if (!accountEmail.equals("") && !accountEmail.equals("Guest"))
     	{
@@ -98,25 +91,21 @@ public class Home extends ListActivity {
     	}
     	else
     	{
-    		currentAccount = null; //todo...temp
+    		currentAccount = null; //TODO...temp
     	}
 
         mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
         parameters = new SelectionParameters(null, null, "Stevens Point", filter_music_cat, filter_business_cat, filter_food_cat, "");
         
-        Da = new DataAccess(onResponseListener, parameters);
+        Da = new DataAccess(Home.this, onResponseListener, "Loading...", parameters);
         Da.execute("6");
        
 
     }
 	
 	protected OnResponseListener onResponseListener = new OnResponseListener() {
-			
-			public void onSuccess(String message ) {
-				Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
-			}
-			
+				
 			public void onFailure(String message) {
 				Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();
 			}
@@ -262,7 +251,7 @@ public class Home extends ListActivity {
 			      getApplicationContext().INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(txtSearch.getWindowToken(), 0);
 		
-		 Da = new DataAccess(onResponseListener, parameters);
+		 Da = new DataAccess(Home.this, onResponseListener, "Loading...", parameters);
 	     Da.execute("6");
 	}
 
