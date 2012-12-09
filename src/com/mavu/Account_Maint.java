@@ -8,13 +8,16 @@ import com.mavu.appcode.DataAccess;
 import com.mavu.appcode.LocalAccountsDataSource;
 import com.mavu.appcode.Post;
 import com.mavu.appcode.DataAccess.OnResponseListener;
+import com.mavu.appcode.SelectionParameters;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,9 +74,12 @@ public class Account_Maint extends Activity {
     	currentAccount = new Account();
         if (getIntent().getStringArrayExtra("accountInfo") != null)
         {
+        	//TODO get account info from server with accountID, need to send accountID from shared val
+        	Da = new DataAccess(this, onResponseListener);
+ 	        Da.execute("4");
         	//Fill in all the values of the currentAccount
         	String[] accountInfo = getIntent().getStringArrayExtra("accountInfo");
-        	currentAccount.setAcccountId(Integer.parseInt(accountInfo[0]));
+        	currentAccount.setAccountId(accountInfo[0]);
         	currentAccount.setfName(accountInfo[1]);
         	currentAccount.setlName(accountInfo[2]);
         	currentAccount.setEmail(accountInfo[3]);
@@ -207,16 +213,14 @@ public class Account_Maint extends Activity {
         	this.menu.getItem(0).setVisible(true);
         	mode = "read";
         	
-	       
-	         
     		currentAccount.setfName(fName);
     		currentAccount.setlName(lName);
     		currentAccount.setEmail(email);
     		currentAccount.setPassword(confirmpassword);
-    		//TODO currentAccount.setDob(new Date(dob));
+    		currentAccount.setDob(dob);
     		
      		//Need to get new Id if the account didnt exist before this
-    		if (currentAccount.getAcccountId() < 1) //good enough? todo
+    		if (currentAccount.getAccountId() == null) //good enough? todo
     		{
     			//TODO create account
     	        Da = new DataAccess(this, onResponseListener, currentAccount);
@@ -231,11 +235,8 @@ public class Account_Maint extends Activity {
     			datasource.open();
     			datasource.updateAccount(currentAccount);
     			
-    			//Update app preferred account to the current one
-
-
-    		   // Da = new DataAccess(responder, currentAccount);
-    	       // Da.execute("3");
+    		    Da = new DataAccess(this, onResponseListener, currentAccount);
+    	        Da.execute("3");
     			
     			Toast.makeText(getApplicationContext(),
     					"updated account",
@@ -248,7 +249,8 @@ public class Account_Maint extends Activity {
     
     }
     
-    protected OnResponseListener onResponseListener = new OnResponseListener() {
+    @SuppressLint("ShowToast")
+	protected OnResponseListener onResponseListener = new OnResponseListener() {
 		
 		public void onFailure(String message) {
 			Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();
@@ -264,6 +266,16 @@ public class Account_Maint extends Activity {
 
 		public void onSuccess(Vector<Post> posts) {
 			
+		}
+
+		public void onSuccess(String accountID) {
+			currentAccount.setAccountId(accountID);
+			Toast.makeText(getApplicationContext(),
+					"created account",
+	                Toast.LENGTH_SHORT).show();
+			datasource = new LocalAccountsDataSource(getApplicationContext());
+			datasource.open();
+			datasource.createAccount(currentAccount);
 		}
 	};
     

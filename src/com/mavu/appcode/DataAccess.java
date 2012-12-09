@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	
@@ -35,6 +36,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	private Post postVals;
 	private Account account;
 	private Vector<Post> posts;
+	private String accountID;
 	
 	private int currentAction;
 	
@@ -47,6 +49,11 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	public DataAccess(Context context, OnResponseListener responder, SelectionParameters parameters){
 		this.responder = responder;
 		this.parameters = parameters;
+		this.progressDialog = new ProgressDialog(context, "Loading...");
+	}
+	
+	public DataAccess(Context context, OnResponseListener responder){
+		this.responder = responder;
 		this.progressDialog = new ProgressDialog(context, "Loading...");
 	}
 	
@@ -136,7 +143,6 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}*/
 			return true;
 		case 2:
-			//TODO Create Account
 			nameValuePair = new ArrayList<NameValuePair>(6);
 			nameValuePair.add(new BasicNameValuePair("action", "Create Account"));
 			nameValuePair.add(new BasicNameValuePair("fname", account.getfName()));
@@ -144,7 +150,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("email", account.getEmail()));
 			nameValuePair.add(new BasicNameValuePair("password", account.getPassword()));
 			nameValuePair.add(new BasicNameValuePair("dob", account.getDob()));
-			
+
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
 			
@@ -160,18 +166,45 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}	catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"));
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				is.close();
+				json = sb.toString();
+			}	catch (Exception e) {
+				Log.e("Buffer Error", "Error converting result " + e.toString());
+			}
+			posts = new Vector<Post>();
+			try {
+				JSONArray jArray = new JSONArray(json);
+				for(int i=0; i<jArray.length(); i++)
+				{
+					jObj = jArray.getJSONObject(i);
+					Log.i("create return val", jObj.getString("insert"));
+					if(jObj.getString("insert").equals("success")){
+						Log.i("create userID val", jObj.getString("accountID"));
+						accountID = jObj.getString("accountID");
+					}
+				}
+				
+			}	catch (JSONException e) {
+				Log.e("JSON Parser", "Error parsing data " + e.toString());
+			}
 			return true;
 		case 3:
-			//TODO update account
 			nameValuePair = new ArrayList<NameValuePair>(7);
 			nameValuePair.add(new BasicNameValuePair("action", "Update Account"));
-			nameValuePair.add(new BasicNameValuePair("account_id", String.valueOf(account.getAcccountId())));
+			nameValuePair.add(new BasicNameValuePair("account_id", String.valueOf(account.getAccountId())));
 			nameValuePair.add(new BasicNameValuePair("fname", account.getfName()));
 			nameValuePair.add(new BasicNameValuePair("lname", account.getlName()));
 			nameValuePair.add(new BasicNameValuePair("email", account.getEmail()));
 			nameValuePair.add(new BasicNameValuePair("password", account.getPassword()));
-			nameValuePair.add(new BasicNameValuePair("dob", account.getDob().toString()));
-			
+			nameValuePair.add(new BasicNameValuePair("dob", account.getDob()));
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
 			
@@ -186,13 +219,38 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				e.printStackTrace();
 			}	catch (IOException e) {
 				e.printStackTrace();
+			}
+			
+			try {
+				BufferedReader reader = new BufferedReader(new InputStreamReader(is, "iso-8859-1"));
+				StringBuilder sb = new StringBuilder();
+				String line;
+				while ((line = reader.readLine()) != null) {
+					sb.append(line + "\n");
+				}
+				is.close();
+				json = sb.toString();
+			}	catch (Exception e) {
+				Log.e("Buffer Error", "Error converting result " + e.toString());
+			}
+			posts = new Vector<Post>();
+			try {
+				JSONArray jArray = new JSONArray(json);
+				for(int i=0; i<jArray.length(); i++)
+				{
+					jObj = jArray.getJSONObject(i);
+					Log.i("create return val", jObj.getString("update"));
+				}
+				
+			}	catch (JSONException e) {
+				Log.e("JSON Parser", "Error parsing data " + e.toString());
 			}
 			return true;
 		case 4:
 			//TODO get account
 			nameValuePair = new ArrayList<NameValuePair>(2);
 			nameValuePair.add(new BasicNameValuePair("action", "Get Account"));
-			nameValuePair.add(new BasicNameValuePair("account_id", params[1]));
+			nameValuePair.add(new BasicNameValuePair("account_id", "50be71eb6e7e7"));
 			
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
@@ -226,7 +284,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			try {
 				JSONArray jArray = new JSONArray(json);
 				jObj = jArray.getJSONObject(0);
-				//TODO make vector list of json data vals
+				Log.i("account vals", jObj.getString("first_name") + "  " + jObj.getString("last_name"));
 			}	catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
 			}
@@ -356,10 +414,10 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			switch (currentAction)
 			{
 				case 2: //Create Account - we want to return the account so that we can get the newly assigned account Id
-					responder.onSuccess(account);
+					responder.onSuccess(accountID);
 					break;
 				case 4: //Get Account (By Id)
-					responder.onSuccess(account);
+					responder.onSuccess(accountID);
 					break;
 				case 6: 
 					responder.onSuccess(posts);
@@ -378,6 +436,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 	public interface OnResponseListener {
 		public void onSuccess(Vector<Post> posts);
 		public void onSuccess(Account account);
+		public void onSuccess(String accountID);
 		public void onFailure(String message);
 	}
 	public class ProgressDialog extends android.app.ProgressDialog {

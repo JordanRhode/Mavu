@@ -6,11 +6,11 @@ public class Account {
 
 	
 	
-	public int getAcccountId() {
+	public String getAccountId() {
 		return acccountId;
 	}
 
-	public void setAcccountId(int acccountId) {
+	public void setAccountId(String acccountId) {
 		this.acccountId = acccountId;
 	}
 
@@ -70,7 +70,7 @@ public class Account {
 		this.dislikes = dislikes;
 	}
 
-	private int acccountId;
+	private String acccountId;
 	private String fName;
 	private String lName;
 	private String email;

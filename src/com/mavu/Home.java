@@ -135,6 +135,10 @@ public class Home extends ListActivity {
 			public void onSuccess(Account account) {
 				setAccount(account);
 			}
+
+
+			public void onSuccess(String accountID) {
+			}
 		};
 	private void setPost(Vector<Post> post1) {
 		this.posts = post1;
@@ -408,7 +412,7 @@ public class Home extends ListActivity {
 		
 		if (currentAccount != null && currentAccount.getEmail() != null && !currentAccount.getEmail().equals(""))
 		{
-			String[] accountInfo = new String[]{String.valueOf(currentAccount.getAcccountId()),
+			String[] accountInfo = new String[]{String.valueOf(currentAccount.getAccountId()),
 												currentAccount.getfName(),
 												currentAccount.getlName(),
 												currentAccount.getEmail(),
@@ -428,7 +432,7 @@ public class Home extends ListActivity {
 	
 	private void createPost()
 	{
-		if (currentAccount.getAcccountId() < 1)
+		if (currentAccount.getAccountId().equals(null) || currentAccount.getAccountId().equals(""))
 		{
 			//means no account is selected.
 			Toast.makeText(getApplicationContext(),
@@ -438,7 +442,7 @@ public class Home extends ListActivity {
 		else
 		{
 
-			int accountId = currentAccount.getAcccountId();	
+			String accountId = currentAccount.getAccountId();	
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), Create_Post.class);
 			intent.putExtra("accountId", accountId);

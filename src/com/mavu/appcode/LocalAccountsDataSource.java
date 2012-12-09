@@ -131,7 +131,7 @@ public class LocalAccountsDataSource {
 	  try
 	  {
 		 //todo: set acocuntid....shouldnt do once we have real db
-		 account.setAcccountId((int) cursor.getLong(0));
+		 account.setAccountId(cursor.getString(0));
 		 account.setfName(cursor.getString(1));
 		 account.setlName(cursor.getString(2));
 		 account.setEmail(cursor.getString(3));
