@@ -31,14 +31,36 @@
 					and isset($_REQUEST["password"])
 			    	and isset($_REQUEST["dob"]))
 			    {
-			        $userID = uniqid();
-			        $password = sha1($_REQUEST["password"] . $salt);
+			    	$sql = "SELECT account_id " .
+			    			"FROM mavu_account " .
+			    			"WHERE email='" . $_REQUEST["email"] . "'";
+			    	$result = mysql_query($sql, $conn);
+			    	if(mysql_fetch_array($result)){
+			    		$bus = array(
+                                    'insert' => 'duplicate'
+                                    );
+			    	} else {
+			    		$userID = uniqid();
+				        $password = sha1($_REQUEST["password"] . $salt);
 
-			     	$sql = "INSERT INTO mavu_account(account_id, first_name, last_name, email, password, dob) " .
-			     			"VALUES('" . $userID . "', '" . $_REQUEST["fname"] . "', '" . $_REQUEST["lname"] . "', '" . 
-			     			 $_REQUEST["email"] . "', '" . $password . "', '" . $_REQUEST["dob"] . "')";
-			        mysql_query($sql, $conn) 
-			        	or die("Couldn't create user account: " . mysql_error());
+				     	$sql = "INSERT INTO mavu_account(account_id, first_name, last_name, email, password, dob) " .
+				     			"VALUES('" . $userID . "', '" . $_REQUEST["fname"] . "', '" . $_REQUEST["lname"] . "', '" . 
+				     			 $_REQUEST["email"] . "', '" . $password . "', '" . $_REQUEST["dob"] . "')";
+						$result = mysql_query($sql, $conn);
+						if($result){
+							$bus = array(
+                                    'insert' => 'success',
+                                    'accountID' => $userID
+                                    );
+						} else {
+							$bus = array(
+                                    'insert' => 'fail'
+                                    );
+						}
+			    	}
+			    	$output = array();
+			    	array_push($output, $bus);
+			    	print(json_encode($output));
 			    }
 				break;
 			case "Update Account":
@@ -46,7 +68,8 @@
 			    	and isset($_REQUEST["lname"])
 					and isset($_REQUEST["email"])
 					and isset($_REQUEST["password"])
-			    	and isset($_REQUEST["dob"]))
+			    	and isset($_REQUEST["dob"])
+			    	and isset($_REQUEST["account_id"]))
 			    {
 			        $password = sha1($_REQUEST["password"] . $salt);
 
@@ -55,14 +78,44 @@
 			     			"', last_name='" . $_REQUEST["lname"] .
 			     			"', email='" . $_REQUEST["email"] .
 			     			"', password='" . $password .
-			     			"', dob='" . $_REQUEST["dob"] . " " .
-			     			"WHERE account_id=" . $_SESSION["account_id"];
-			        mysql_query($sql, $conn) 
-			        	or die("Couldn't update user account: " . mysql_error());
+			     			"', dob='" . $_REQUEST["dob"] . "' " .
+			     			"WHERE account_id='" . $_REQUEST["account_id"] . "'";
+			        $result = mysql_query($sql, $conn);
+			        if($result){
+							$bus = array(
+                                    'update' => 'success',
+                                    );
+						} else {
+							$bus = array(
+                                    'update' => 'fail'
+                                    );
+						}
+						$output = array();
+			    	array_push($output, $bus);
+			    	print(json_encode($output));
 			    }
 				break;
 			case "Get Account":
-				//TODO get account data from DB from account id
+				if(isset($_REQUEST["account_id"])){
+					$sql = "SELECT first_name, last_name, email, dob, likes, dislikes " .
+							"FROM mavu_account " .
+							"WHERE account_id='" . $_REQUEST["account_id"] . "'";
+					$result = mysql_query($sql, $conn) or die(mysql_error());
+					$output = array();
+					while($row = mysql_fetch_array($result))
+					{
+						$bus = array(
+                                    'first_name' => $row['first_name'],
+                                    'last_name' => $row['last_name'],
+                                    'email' => $row['email'],
+                                    'dob' => $row['dob'],
+                                    'likes' => $row['likes'],
+                                    'dislikes' => $row['dislikes']
+                                );
+                        array_push($output, $bus);
+                    }
+                    print(json_encode($output));
+				}
 				break;
 			case "Create Post":
 					if(isset($_REQUEST["title"])
@@ -76,7 +129,7 @@
 					{
 						$sql = "INSERT INTO mavu_post(account_id, title, description, category, city, time, date, address, zipcode) " .
 								"VALUES('" . $_SESSION["account_id"] . "', '" . $_REQUEST["title"] . "', '" . $_REQUEST["description"] . 
-									"', '" . $_REQUEST["category"] . "', '" . $_REQUEST["city"] . "', '" . $_REQUEST["time"] .
+									"', '" . $_REQUEST["category"] . "', '" . strtoupper(($_REQUEST["city"])) . "', '" . $_REQUEST["time"] .
 									"', '" . $_REQUEST["date"] . "', '" . $_REQUEST["address"] . "', '" . $_REQUEST["zipcode"] . "')";
 						mysql_query($sql, $conn)
 								or die("Couldn't create post: " + mysql_error());
@@ -94,7 +147,7 @@
 					$sql = "SELECT post_id, title, description, category, city, time, date, address " .
 					"FROM mavu_post " .
 					"WHERE date BETWEEN '" . $_REQUEST["lowDate"] . "' and '" . $_REQUEST["highDate"] . "' " .
-					"AND city='" . $_REQUEST["city"] . "' ";
+					"AND city='" . strtoupper($_REQUEST["city"]) . "' ";
                                         //echo $sql;
 					if($_REQUEST["music"] == "true" && $_REQUEST["business"] == "true" && $_REQUEST["food"] == "true")
 					{
@@ -151,6 +204,7 @@
 			mysql_close();
 			break;
 		}
+		mysql_close();
 	}
 
 	?>
