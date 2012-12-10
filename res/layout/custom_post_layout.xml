@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:background="@color/background_color"
     android:footerDividersEnabled = "true" >
-
+<!--  android:background="@color/background_color" -->
     <ImageView
         android:id="@+id/postImage"
         android:layout_width="65dp"

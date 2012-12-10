@@ -69,6 +69,13 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		this.progressDialog = new ProgressDialog(context, "Loading...");
 	}
 	
+	//Used for getting the account based on the account id
+	public DataAccess(Context context, OnResponseListener responder, String accountId){
+		this.responder = responder;
+		this.accountID = accountId;
+		this.progressDialog = new ProgressDialog(context, "Loading...");
+	}
+	
 	@Override
 	protected void onPreExecute(){
 		progressDialog.show();
@@ -133,14 +140,30 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}	catch (Exception e) {
 				Log.e("Buffer Error", "Error converting result " + e.toString());
 			}
-			/*
+			
+			account = new Account();
 			try {
 				JSONArray jArray = new JSONArray(json);
-				//JSONObject jObj = jArray.getJSONObject(0);
-				//TODO put values in a shared preferences object
+				jObj = jArray.getJSONObject(0);
+				Log.i("account vals", jObj.getString("first_name") + "  " + jObj.getString("last_name"));
+				
+				//Set account fields
+				account.setAccountId(jObj.getString("account_id"));
+				account.setDob(jObj.getString("dob"));
+				account.setEmail(jObj.getString("email"));
+				account.setfName(jObj.getString("first_name"));
+				account.setlName(jObj.getString("last_name"));
+				//account.setPassword(jObj.getString("password"));
+				
+				//TODO - implement likes and dislikes
+				//account.setLikes(jObj.getInt("likes"));
+				//account.setDislikes(jObj.getInt("dislikes"));
+				
+				
 			}	catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
-			}*/
+				return false;
+			}
 			return true;
 		case 2:
 			nameValuePair = new ArrayList<NameValuePair>(6);
@@ -179,7 +202,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}	catch (Exception e) {
 				Log.e("Buffer Error", "Error converting result " + e.toString());
 			}
-			posts = new Vector<Post>();
+			//posts = new Vector<Post>();
 			try {
 				JSONArray jArray = new JSONArray(json);
 				for(int i=0; i<jArray.length(); i++)
@@ -233,7 +256,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			}	catch (Exception e) {
 				Log.e("Buffer Error", "Error converting result " + e.toString());
 			}
-			posts = new Vector<Post>();
+			//posts = new Vector<Post>();
 			try {
 				JSONArray jArray = new JSONArray(json);
 				for(int i=0; i<jArray.length(); i++)
@@ -250,7 +273,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			//TODO get account
 			nameValuePair = new ArrayList<NameValuePair>(2);
 			nameValuePair.add(new BasicNameValuePair("action", "Get Account"));
-			nameValuePair.add(new BasicNameValuePair("account_id", "50be71eb6e7e7"));
+			nameValuePair.add(new BasicNameValuePair("account_id", this.accountID));
 			
 			httpClient = new DefaultHttpClient();
 			httpPost = new HttpPost("http://mavu.jordanrhode.com/user_actions.php");	
@@ -281,12 +304,28 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				Log.e("Buffer Error", "Error converting result " + e.toString());
 			}
 			
+			account = new Account();
 			try {
 				JSONArray jArray = new JSONArray(json);
 				jObj = jArray.getJSONObject(0);
 				Log.i("account vals", jObj.getString("first_name") + "  " + jObj.getString("last_name"));
+				
+				//Set account fields
+				//account.setAccountId(jObj.getString("account_id"));
+				account.setDob(jObj.getString("dob"));
+				account.setEmail(jObj.getString("email"));
+				account.setfName(jObj.getString("first_name"));
+				account.setlName(jObj.getString("last_name"));
+				//account.setPassword(jObj.getString("password"));
+				
+				//TODO - implement likes and dislikes
+				//account.setLikes(jObj.getInt("likes"));
+				//account.setDislikes(jObj.getInt("dislikes"));
+				
+				
 			}	catch (JSONException e) {
 				Log.e("JSON Parser", "Error parsing data " + e.toString());
+				return false;
 			}
 			return true;
 		case 5:
@@ -413,11 +452,20 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		{
 			switch (currentAction)
 			{
+				case 1: //Get Account by email
+					responder.onSuccess(account);
+					break;
 				case 2: //Create Account - we want to return the account so that we can get the newly assigned account Id
 					responder.onSuccess(accountID);
 					break;
+				case 3: //Update Account
+					responder.onSuccess(result);
+					break;
 				case 4: //Get Account (By Id)
-					responder.onSuccess(accountID);
+					responder.onSuccess(account);
+					break;
+				case 5: //Create Post
+					responder.onSuccess(result);
 					break;
 				case 6: 
 					responder.onSuccess(posts);
@@ -437,6 +485,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		public void onSuccess(Vector<Post> posts);
 		public void onSuccess(Account account);
 		public void onSuccess(String accountID);
+		public void onSuccess(Boolean passed);
 		public void onFailure(String message);
 	}
 	public class ProgressDialog extends android.app.ProgressDialog {

@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
     <PreferenceCategory android:title="Account Preferences" >
+       
+        <EditTextPreference 
+            android:key="pref_account_id"
+            android:summary="Current Account Id"
+            android:title="@string/prefs_account_id"
+            android:shouldDisableView="true" />
+        
      <ListPreference
 	    android:key="@string/preferred_Account"
 	    android:title="@string/prefs_Acct_Summary"

@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class Settings extends PreferenceActivity {
 		ListPreference lp = (ListPreference) findPreference("prefs_account_key");
         lp.setEntries(possibleAccounts);
         lp.setEntryValues(possibleAccounts);
+        
         
     }
     

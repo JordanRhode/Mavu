@@ -6,9 +6,12 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Vector;
 
+import com.mavu.appcode.Account;
 import com.mavu.appcode.DataAccess;
 import com.mavu.appcode.Post;
+import com.mavu.appcode.DataAccess.OnResponseListener;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,12 +35,13 @@ public class Create_Post extends Activity {
      String city;
      String time;
      Date theDate;
+     private String accountID;
 	
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_post_layout);
              
-        int accountID = getIntent().getIntExtra("accountId", 0);
+        accountID = getIntent().getStringExtra("accountId");
         
 	}
         
@@ -69,13 +73,14 @@ public class Create_Post extends Activity {
 					//Date setting
 					String date = ((EditText) findViewById(R.id.txtDate)).getText().toString();
 					
-					try {
-						theDate = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH).parse(date);
+					//TODO Datepicker
+					/*try {
+						//theDate = new SimpleDateFormat("MM-dd-yyyy", Locale.ENGLISH).parse(date);
 						} 
 					catch (ParseException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
+					}*/
 					
 					if (title.equals("") || desc.equals("") || category.equals("") || address.equals("") || city.equals("") || time.equals(""))
 					{
@@ -86,8 +91,9 @@ public class Create_Post extends Activity {
 					else
 					{
 						//Create post - accountId
-						//Post newPost = new Post(25, title, desc, category, address, city, time, theDate);
-						//da.CreatePost(newPost);
+						Post newPost = new Post(accountID, title, desc, category, address, city, time, date);
+						DataAccess Da = new DataAccess(getApplicationContext(), onResponseListener, newPost);
+				        Da.execute("5");
 						
 						Toast.makeText(getApplicationContext(),
 								 "Post successfully saved",
@@ -106,5 +112,27 @@ public class Create_Post extends Activity {
 		 	return true;
 		}
 	
+		protected OnResponseListener onResponseListener = new OnResponseListener() {
+			
+			public void onFailure(String message) {
+				Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();
 	
+			}
+
+
+			public void onSuccess(Vector<Post> posts) {
+
+			}
+			
+			public void onSuccess(Account account) {
+		
+			}
+
+			public void onSuccess(Boolean passed) {
+				Toast.makeText(getApplicationContext(), "big booty: ", Toast.LENGTH_LONG).show();
+			}
+			
+			public void onSuccess(String accountID) {
+			}
+		};
 }

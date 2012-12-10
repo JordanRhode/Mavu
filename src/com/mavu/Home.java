@@ -44,11 +44,13 @@ public class Home extends ListActivity {
 	private Vector<Post> posts;
 	private LayoutInflater mInflater;
 	private Account currentAccount;
+	private SharedPreferences preferences;
 	private Resources resources;
+	private SharedPreferences.Editor editor;
 	private SelectionParameters parameters;
 	private DataAccess Da;
 	private Menu menu;
-	
+	private String tmpAccountId;
 	
 	private EditText txtSearch;
 	//Preferences variables
@@ -56,9 +58,6 @@ public class Home extends ListActivity {
  	private Boolean filter_music_cat;
  	private Boolean filter_business_cat;
  	private Boolean filter_food_cat;
-	private String accountEmail;
-	
-	private LocalAccountsDataSource datasource;
 
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,53 +65,60 @@ public class Home extends ListActivity {
         setContentView(R.layout.home_layout);
         
         resources = this.getResources();
-        
-        //Try reading saved preferences...see if an account exists.
-        // If so then set the current account
-        SharedPreferences preferences =
+		preferences =
         	    PreferenceManager.getDefaultSharedPreferences(this);
-    	accountEmail = preferences.getString(
-    	        resources.getString(R.string.preferred_Account),
-    	        resources.getString(R.string.sort_option_default_value));
-    	
-        filter_city = preferences.getString("city", "n/a");
-    	filter_music_cat = preferences.getBoolean("music_cat", true);
-    	filter_business_cat = preferences.getBoolean("business_cat", true);
-    	filter_food_cat = preferences.getBoolean("food_cat", true);
+		editor = preferences.edit();
+        
+        //Gets filter preferences and checks if there is an account saved. If so, then a call to the server is made to get the current account
+        retrievePreferences();
 
-    	if (!accountEmail.equals("") && !accountEmail.equals("Guest"))
-    	{
-	    	datasource = new LocalAccountsDataSource(this);
-	    	datasource.open();
-	    	currentAccount = datasource.getAccount(accountEmail); //we will only use this to use the email to get the account
-	    	
-	    	//todo: when we have it set up, call the actual get account from the server... we wont use the code thats currently above
-	    	//Da = new DataAccess(Home.this, onResponseListener, "Loading...", parameters);
-	        //Da.execute("8");
-    	}
-    	else
-    	{
-    		currentAccount = null; 
-    	}
-    	
     	//Get the search bar and then hide it. It is only displayed on search click
     	txtSearch = ((EditText)findViewById(R.id.searchText));
     	
     	
-
+    	//Setup customlayout for posts listview
         mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 
-        parameters = new SelectionParameters(null, null, "Stevens Point", filter_music_cat, filter_business_cat, filter_food_cat, "");
         
-        Da = new DataAccess(Home.this, onResponseListener, parameters);
+        parameters = new SelectionParameters(null, null, filter_city, filter_music_cat, filter_business_cat, filter_food_cat, "");   
+		Da = new DataAccess(Home.this, onResponseListener, parameters);
         Da.execute("6");
        
 
     }
 	
+	//Gets filter preferences and checks if there is an account saved. If so, then a call to the server is made to get the current account
+	protected void retrievePreferences()
+	{
+        //Try reading saved preferences...see if an account exists.
+        // If so then set the current account id, call the server and return the current account
+        
+        //Get filters saved in preferences
+        filter_city = preferences.getString("city", "n/a");
+    	filter_music_cat = preferences.getBoolean("music_cat", true);
+    	filter_business_cat = preferences.getBoolean("business_cat", true);
+    	filter_food_cat = preferences.getBoolean("food_cat", true);
+        
+        //Read the preferences to see if there is any saved account id
+        tmpAccountId = preferences.getString("pref_account_id", "no"); 
+        
+        if (tmpAccountId.equals("no"))
+        {
+        	currentAccount = null;
+        }
+        else
+        {
+        	//If the value is not 'no' then it has been set so we can call the server, pass in 'tmpAccountId'
+        	
+        	Da = new DataAccess(Home.this, onResponseListener, tmpAccountId);
+            Da.execute("4");  	
+        }
+	}
+	
 	@Override
 	protected void onResume()
 	{
+		//TODO set current account equal to what it was from account_maint
 		if (txtSearch != null)
 		{
 			txtSearch.setVisibility(View.GONE);
@@ -125,6 +131,7 @@ public class Home extends ListActivity {
 				
 			public void onFailure(String message) {
 				Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();
+				updateCreatePostEnabledStatus(false);
 			}
 
 
@@ -134,9 +141,13 @@ public class Home extends ListActivity {
 			
 			public void onSuccess(Account account) {
 				setAccount(account);
+				updateCreatePostEnabledStatus(true);
+				
 			}
 
-
+			public void onSuccess(Boolean passed) {
+			}
+			
 			public void onSuccess(String accountID) {
 			}
 		};
@@ -149,6 +160,8 @@ public class Home extends ListActivity {
 	
 	private void setAccount(Account account) {
 		this.currentAccount = account;
+		this.currentAccount.setAccountId(tmpAccountId);
+		Toast.makeText(getApplicationContext(), "Signed in: " + account.getEmail(), Toast.LENGTH_LONG).show();
 	}
 
 @Override
@@ -158,6 +171,7 @@ public class Home extends ListActivity {
         if (currentAccount != null && currentAccount.getEmail() != null && !currentAccount.getEmail().equals(""))
         {
         	updateCreatePostEnabledStatus(true);
+        	
         }
         else
         {
@@ -172,10 +186,6 @@ public class Home extends ListActivity {
     	switch (item.getItemId())
     	{
     		case R.id.accountMenu:
-
-    			//Todo:
-    			//Maybe do a call to a local db to see if an account is stored..if so then pre fill the values to the logged in person
-    			// assign currentAccount object
     			openAccount();
     			break;
     			
@@ -193,12 +203,28 @@ public class Home extends ListActivity {
     		           Intent intent = new Intent()
     		           		.setClass(this,
     		                com.mavu.Settings.class);
-    		           this.startActivityForResult(intent, 0);
+    		           this.startActivityForResult(intent, 2);
     		           break;
+    		           
+    		case R.id.menu_logout:
+    			//Update preferences account Id
+    			editor.putString("pref_account_id", "no");
+    			editor.commit();
+    			updateCreatePostEnabledStatus(false);
+    			Toast.makeText(getApplicationContext(),
+    					"Successfully logged out",
+    	                Toast.LENGTH_SHORT).show();
+    			break;
+
+    		case R.id.menu_login:
+    			Intent intent2 = new Intent();
+    			intent2.setClass(this, Login.class);
+    			startActivityForResult(intent2, 3);
+    			
     		             			  		       
     	} 	
-    	//return super.onOptionsItemSelected(item);
-    	return true;
+    	return super.onOptionsItemSelected(item);
+    	//return true;
 
     }
 
@@ -216,10 +242,8 @@ public class Home extends ListActivity {
 	    AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 	    
 	    //Show the search text box
-		//txtSearch = ((EditText)findViewById(R.id.searchText));
     	txtSearch.setVisibility(View.VISIBLE);
     	txtSearch.setFocusable(true);
-    	//txtSearch.setHeight(10); //todo
     	
 	    switch (item.getItemId()) {
 	        case R.id.search_byAccount:
@@ -263,7 +287,7 @@ public class Home extends ListActivity {
 		{
 			parameters.setHighDate(txtSearch.getText().toString());
 			parameters.setLowDate(txtSearch.getText().toString());
-			//Todo: how to format search date? Allow them to enter month name? or in gay format?
+			//TODO: how to format search date? Allow them to enter month name? or in gay format?
 		}
   
 	}
@@ -387,15 +411,15 @@ public class Home extends ListActivity {
 		private int setImageType(String category)
 		{
 			int resID = 0;
-			if (category.equals("food"))
+			if (category.equals("Food"))
 			{
 				resID = R.drawable.food;
 			}
-			else if (category.equals("business"))
+			else if (category.equals("Business"))
 			{
 				resID = R.drawable.business;
 			}
-			else if (category.equals("music"))
+			else if (category.equals("Music"))
 			{
 				resID = R.drawable.music;
 			}
@@ -408,8 +432,7 @@ public class Home extends ListActivity {
 	{
 		Intent intent = new Intent();
 		intent.setClass(this, Account_Maint.class);
-		//intent.setClass(getApplicationContext());
-		
+
 		if (currentAccount != null && currentAccount.getEmail() != null && !currentAccount.getEmail().equals(""))
 		{
 			String[] accountInfo = new String[]{String.valueOf(currentAccount.getAccountId()),
@@ -426,13 +449,13 @@ public class Home extends ListActivity {
 		}
 		
 		
-		startActivity(intent);		    
+		startActivityForResult(intent, 1);		    
 	}
 
 	
 	private void createPost()
 	{
-		if (currentAccount.getAccountId().equals(null) || currentAccount.getAccountId().equals(""))
+		if (currentAccount != null && currentAccount.getAccountId().equals(null) || currentAccount.getAccountId().equals(""))
 		{
 			//means no account is selected.
 			Toast.makeText(getApplicationContext(),
@@ -454,12 +477,61 @@ public class Home extends ListActivity {
     @Override
     public void onActivityResult(int reqCode, int resCode, Intent data)
     {
-    	super.onActivityResult(reqCode, resCode, data);
-    	setOptionText();
+    	switch (reqCode)
+    	{
+
+    		case 1:	//Open Account/Return Account
+    			if (resCode == RESULT_OK)
+    			{
+	    			String[] newAccountInfo = data.getStringArrayExtra("newAccountInfo");
+	    			currentAccount = new Account();
+	            	currentAccount.setAccountId(newAccountInfo[0]);
+	            	currentAccount.setfName(newAccountInfo[1]);
+	            	currentAccount.setlName(newAccountInfo[2]);
+	            	currentAccount.setEmail(newAccountInfo[3]);
+	            	currentAccount.setDob(newAccountInfo[4]);
+	            	currentAccount.setPassword(newAccountInfo[5]);
+	            	currentAccount.setLikes(Integer.parseInt(newAccountInfo[6]));
+	            	currentAccount.setDislikes(Integer.parseInt(newAccountInfo[7]));
+	            	
+	            	updateCreatePostEnabledStatus(true);
+    			}
+
+    			break;
+    		case 2: //Set preferences
+    			setOptionText();
+    			
+    	    	//TODO call data access for new set of posts with correct filters
+    	        Da = new DataAccess(this, onResponseListener, parameters);
+    	        Da.execute("6");
+    	        
+    			break;
+    		case 3:
+    			if (resCode == RESULT_OK)
+    			{
+	    			String[] newAccountInfo = data.getStringArrayExtra("newAccountInfo");
+	    			currentAccount = new Account();
+	            	currentAccount.setAccountId(newAccountInfo[0]);
+	            	currentAccount.setfName(newAccountInfo[1]);
+	            	currentAccount.setlName(newAccountInfo[2]);
+	            	currentAccount.setEmail(newAccountInfo[3]);
+	            	currentAccount.setDob(newAccountInfo[4]);
+	            	currentAccount.setPassword(newAccountInfo[5]);
+	            	currentAccount.setLikes(Integer.parseInt(newAccountInfo[6]));
+	            	currentAccount.setDislikes(Integer.parseInt(newAccountInfo[7]));
+	            	
+	        		preferences =
+	                	    PreferenceManager.getDefaultSharedPreferences(this);
+	        		editor = preferences.edit();
+	            	editor.putString("pref_account_id", currentAccount.getAccountId());
+	    			editor.commit();
+	            	updateCreatePostEnabledStatus(true);
+    			}
+    	}
     	
-        /*Da = new DataAccess(onResponseListener, parameters);
-        Da.execute("6");
-        */
+    	
+    	super.onActivityResult(reqCode, resCode, data);
+
     }
     
     private void setOptionText()
@@ -473,12 +545,12 @@ public class Home extends ListActivity {
     	filter_business_cat = preferences.getBoolean("business_cat", false);
     	filter_food_cat = preferences.getBoolean("food_cat", false);
 
-    	accountEmail = preferences.getString(
+    	/*accountEmail = preferences.getString(
     	        resources.getString(R.string.preferred_Account),
-    	        resources.getString(R.string.sort_option_default_value));
+    	        resources.getString(R.string.sort_option_default_value));*/ //TODO delete
 
     	
-    	if (!accountEmail.equals("") && !accountEmail.equals("Guest"))
+    	/*if (!accountEmail.equals("") && !accountEmail.equals("Guest"))
     	{
 	    	datasource = new LocalAccountsDataSource(this);
 	    	datasource.open();
@@ -492,7 +564,7 @@ public class Home extends ListActivity {
     		currentAccount = null;
     		updateCreatePostEnabledStatus(false);
     	}
-
+*/ //TODO delete..probably dont need any of this anymore
     	
     	
     	Time now = new Time();
@@ -518,32 +590,17 @@ public class Home extends ListActivity {
     private void updateCreatePostEnabledStatus(boolean status)
     {
     	// 2 - Create post. If we update the menu layout then we need to change this
+    	// 4 - Logout
+    	// 5 - login
     	menu.getItem(2).setEnabled(status);
     	menu.getItem(2).setVisible(status);
+    	
+    	menu.getItem(4).setEnabled(status);
+    	menu.getItem(4).setVisible(status);
+    	menu.getItem(5).setEnabled(!status);
+    	menu.getItem(5).setVisible(!status);
     
     }
-    
-    //REgister back key so taht when the user presses back I can check if the
-    // seach text box is still displayed, if it is then i will disable that instead of destroying
-    
-    /*@Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)  {
-        if (Integer.parseInt(android.os.Build.VERSION.SDK) < 5
-                && keyCode == KeyEvent.KEYCODE_BACK
-                && event.getRepeatCount() == 0) {
-            onBackPressed();
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-    public void onBackPressed() {
-        Intent setIntent = new Intent(Intent.ACTION_MAIN);
-        setIntent.addCategory(Intent.CATEGORY_HOME);
-        setIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(setIntent); 
-
-        return;
-    }*/   
+     
 }
 
