@@ -370,18 +370,21 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			{
 				nameValuePair.add(new BasicNameValuePair("city", parameters.getCity().toString()));
 			}
-			if (parameters.getMusic_category())
+			/*if (parameters.getMusic_category())
 			{
 				nameValuePair.add(new BasicNameValuePair("music", parameters.getMusic_category().toString()));
-			}
-			if (parameters.getFood_category())
+			}*/
+			/*if (parameters.getFood_category())
 			{
 				nameValuePair.add(new BasicNameValuePair("food", parameters.getFood_category().toString()));
-			}
-			if (parameters.getBusiness_category())
+			}*/
+			nameValuePair.add(new BasicNameValuePair("music", parameters.getMusic_category().toString()));
+			nameValuePair.add(new BasicNameValuePair("food", parameters.getFood_category().toString()));
+			nameValuePair.add(new BasicNameValuePair("business", parameters.getBusiness_category().toString()));
+			/*if (parameters.getBusiness_category())
 			{
 				nameValuePair.add(new BasicNameValuePair("business", parameters.getBusiness_category().toString()));
-			}
+			}*/
 			if (!parameters.getTitle().equals(""))
 			{
 				nameValuePair.add(new BasicNameValuePair("title", parameters.getTitle().toString()));
@@ -426,7 +429,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				{
 					jObj = jArray.getJSONObject(i);
 					Post post = new Post(jObj.get("post_id").toString(), jObj.getString("title"), jObj.getString("description"), jObj.getString("category"),jObj.getString("address"), jObj.getString("city"), jObj.getString("time"), jObj.get("date").toString());
-		        	//post.setAccountID(jObj.getString("account_id"));
+		        	post.setAccountID(jObj.getString("accountID"));
 					posts.add(post);
 				}
 				
