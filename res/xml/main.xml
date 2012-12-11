@@ -8,14 +8,14 @@
             android:title="@string/prefs_account_id"
             android:shouldDisableView="true" />
         
-     <ListPreference
+   <!--   <ListPreference
 	    android:key="@string/preferred_Account"
 	    android:title="@string/prefs_Acct_Summary"
 	    android:summary="@string/dialogTitle"
 	    android:entries="@array/possible_accounts_title"
 	    android:entryValues="@array/possible_accounts_values"
 	    android:dialogTitle="@string/dialogTitle"
-	    android:defaultValue="@string/sort_option_default_value"  />
+	    android:defaultValue="@string/sort_option_default_value"  />  -->
     </PreferenceCategory>
     
     

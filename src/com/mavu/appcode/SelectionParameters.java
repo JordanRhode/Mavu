@@ -9,6 +9,10 @@ public class SelectionParameters {
 	}
 
 	public void setLowDate(String lowDate) {
+		if (lowDate.equals(""))
+		{
+			this.lowDate = "0001-01-01";
+		}
 		this.lowDate = lowDate;
 	}
 
@@ -17,7 +21,14 @@ public class SelectionParameters {
 	}
 
 	public void setHighDate(String highDate) {
-		this.highDate = highDate;
+		if (highDate.equals(""))
+		{
+			this.highDate = "9999-12-12";
+		}
+		else
+		{
+			this.highDate = highDate;
+		}
 	}
 
 	public String getCity() {
@@ -62,11 +73,11 @@ public class SelectionParameters {
 	}
 	
 	
-	public String getAccountId() {
+	public String getAccountLastName() { //Last Name?
 		return accountName;
 	}
 
-	public void setAccountId(String accountName) { //Up to you how we should do this.. check first and last for anything like?
+	public void setAccountLastName(String accountName) { //Up to you how we should do this.. check first and last for anything like?
 		this.accountName = accountName;
 	}
 

@@ -39,6 +39,16 @@
     <string name="prefs_food_cat">Show Food</string>
     <string name="prefs_business_cat">Show Businesses</string>
     <string name="view_owner">View Owner</string>
+    
+    <string name="Title">Event Title</string>
+    <string name="Category">Category</string>
+    <string name="Address">Address</string>
+    <string name="City">City</string>
+    <string name="Time">Time</string>
+    <string name="Date">Date</string>
+    <string name="setTime">Set Time</string>
+    <string name="setDate">Set Date</string>
+    <string name="Desc">Description</string>
 
     <string-array name="searchOptions">
         <item>By Title</item>

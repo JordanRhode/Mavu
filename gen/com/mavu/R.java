@@ -30,33 +30,36 @@ public final class R {
         public static final int ic_menu_add=0x7f020006;
         public static final int ic_menu_edit=0x7f020007;
         public static final int ic_menu_save=0x7f020008;
-        public static final int music=0x7f020009;
-        public static final int owner=0x7f02000a;
-        public static final int settings=0x7f02000b;
+        public static final int mavu_launcher=0x7f020009;
+        public static final int music=0x7f02000a;
+        public static final int owner=0x7f02000b;
+        public static final int settings=0x7f02000c;
     }
     public static final class id {
-        public static final int EditAccount=0x7f0a0021;
-        public static final int SaveAccount=0x7f0a0022;
-        public static final int accountMenu=0x7f0a0027;
+        public static final int EditAccount=0x7f0a0023;
+        public static final int SaveAccount=0x7f0a0024;
+        public static final int accountMenu=0x7f0a0029;
         public static final int btnSetDate=0x7f0a0008;
-        public static final int createPost=0x7f0a0028;
+        public static final int btnSetDatePost=0x7f0a0016;
+        public static final int btnSetTimePost=0x7f0a0018;
+        public static final int createPost=0x7f0a002a;
         public static final int lblDislikes=0x7f0a0010;
         public static final int lblLikes=0x7f0a000e;
-        public static final int menu_login=0x7f0a0023;
-        public static final int menu_logout=0x7f0a002a;
-        public static final int menu_prefs=0x7f0a0029;
-        public static final int menu_settings=0x7f0a0024;
-        public static final int postDate=0x7f0a001c;
-        public static final int postDesc=0x7f0a001e;
-        public static final int postImage=0x7f0a001a;
-        public static final int postTime=0x7f0a001d;
-        public static final int postTitle=0x7f0a001b;
-        public static final int save_post=0x7f0a0025;
-        public static final int search=0x7f0a0026;
-        public static final int searchText=0x7f0a001f;
-        public static final int search_byAccount=0x7f0a002d;
-        public static final int search_byDate=0x7f0a002e;
-        public static final int search_byTitle=0x7f0a002c;
+        public static final int menu_login=0x7f0a0025;
+        public static final int menu_logout=0x7f0a002c;
+        public static final int menu_prefs=0x7f0a002b;
+        public static final int menu_settings=0x7f0a0026;
+        public static final int postDate=0x7f0a001e;
+        public static final int postDesc=0x7f0a0020;
+        public static final int postImage=0x7f0a001c;
+        public static final int postTime=0x7f0a001f;
+        public static final int postTitle=0x7f0a001d;
+        public static final int save_post=0x7f0a0027;
+        public static final int search=0x7f0a0028;
+        public static final int searchText=0x7f0a0021;
+        public static final int search_byAccount=0x7f0a002f;
+        public static final int search_byDate=0x7f0a0030;
+        public static final int search_byTitle=0x7f0a002e;
         public static final int spnCategory=0x7f0a0014;
         public static final int textView1=0x7f0a0000;
         public static final int textView2=0x7f0a0002;
@@ -66,22 +69,22 @@ public final class R {
         public static final int textView6=0x7f0a000b;
         public static final int textView7=0x7f0a000d;
         public static final int textView8=0x7f0a000f;
-        public static final int txtAddress=0x7f0a0018;
-        public static final int txtCategory=0x7f0a0020;
-        public static final int txtCity=0x7f0a0017;
+        public static final int txtAddress=0x7f0a001a;
+        public static final int txtCategory=0x7f0a0022;
+        public static final int txtCity=0x7f0a0019;
         public static final int txtConfirmPassword=0x7f0a000c;
         public static final int txtDOB=0x7f0a0007;
         public static final int txtDate=0x7f0a0015;
-        public static final int txtDescription=0x7f0a0019;
+        public static final int txtDescription=0x7f0a001b;
         public static final int txtEmail=0x7f0a0005;
         public static final int txtFName=0x7f0a0001;
         public static final int txtLName=0x7f0a0003;
         public static final int txtLoginEmail=0x7f0a0011;
         public static final int txtLoginPass=0x7f0a0012;
         public static final int txtPassword=0x7f0a000a;
-        public static final int txtTime=0x7f0a0016;
+        public static final int txtTime=0x7f0a0017;
         public static final int txtTitle=0x7f0a0013;
-        public static final int view_owner=0x7f0a002b;
+        public static final int view_owner=0x7f0a002d;
     }
     public static final class layout {
         public static final int account_maint_layout=0x7f030000;
@@ -104,6 +107,13 @@ public final class R {
         public static final int search_context_menu=0x7f090007;
     }
     public static final class string {
+        public static final int Address=0x7f070029;
+        public static final int Category=0x7f070028;
+        public static final int City=0x7f07002a;
+        public static final int Date=0x7f07002c;
+        public static final int Desc=0x7f07002f;
+        public static final int Time=0x7f07002b;
+        public static final int Title=0x7f070027;
         public static final int aConfirmPass=0x7f070011;
         public static final int aDOB=0x7f07000f;
         public static final int aDislikes=0x7f070013;
@@ -121,7 +131,7 @@ public final class R {
         public static final int category=0x7f07000b;
         public static final int create_post=0x7f070005;
         public static final int dialogTitle=0x7f07001c;
-        public static final int hello_world=0x7f070027;
+        public static final int hello_world=0x7f070030;
         public static final int login=0x7f070016;
         public static final int logout=0x7f070015;
         public static final int menu_prefs_title=0x7f07001e;
@@ -141,9 +151,11 @@ public final class R {
         public static final int prefs_music_cat=0x7f070023;
         public static final int save_post=0x7f070006;
         public static final int search=0x7f07000a;
+        public static final int setDate=0x7f07002e;
+        public static final int setTime=0x7f07002d;
         public static final int sort_option_default_value=0x7f07001b;
         public static final int title_activity_home=0x7f070009;
-        public static final int title_activity_login=0x7f070028;
+        public static final int title_activity_login=0x7f070031;
         public static final int view_owner=0x7f070026;
     }
     public static final class style {

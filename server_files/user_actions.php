@@ -196,6 +196,7 @@
                                                         'time' => $row['time'],
                                                         'date' => $row['date'],
                                                         'address' => $row['address']
+                                                        ']
                                                     );
                                                 array_push($output, $bus);
                                         }

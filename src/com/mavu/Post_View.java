@@ -67,12 +67,6 @@ public class Post_View extends Activity {
     	switch (item.getItemId())
     	{
     		case R.id.view_owner:
-    			Toast.makeText(getApplicationContext(),
-    					"clicked account",
-    	                Toast.LENGTH_SHORT).show();
-    			//Todo:
-    			//Maybe do a call to a local db to see if an account is stored..if so then pre fill the values to the logged in person
-    			// assign currentAccount object
     			openAccount();
     			break;
     		       
@@ -84,7 +78,7 @@ public class Post_View extends Activity {
     
     protected void openAccount()
     {
-    	int accountId = Integer.parseInt(post.getAccountID());
+    	String accountId = post.getAccountID();
     	Intent intent = new Intent();
 		intent.setClass(this, Account_View.class);
 		intent.putExtra("accountId", accountId);

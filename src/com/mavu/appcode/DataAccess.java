@@ -366,7 +366,7 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 			nameValuePair.add(new BasicNameValuePair("lowDate", parameters.getLowDate().toString()));
 			nameValuePair.add(new BasicNameValuePair("highDate", parameters.getHighDate().toString()));
 			
-			if (!parameters.getCity().equals(""))
+			if (!parameters.getCity().equals("") && !parameters.getCity().equals("n/a"))
 			{
 				nameValuePair.add(new BasicNameValuePair("city", parameters.getCity().toString()));
 			}
@@ -426,7 +426,8 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				{
 					jObj = jArray.getJSONObject(i);
 					Post post = new Post(jObj.get("post_id").toString(), jObj.getString("title"), jObj.getString("description"), jObj.getString("category"),jObj.getString("address"), jObj.getString("city"), jObj.getString("time"), jObj.get("date").toString());
-		        	posts.add(post);
+		        	//post.setAccountID(jObj.getString("account_id"));
+					posts.add(post);
 				}
 				
 			}	catch (JSONException e) {

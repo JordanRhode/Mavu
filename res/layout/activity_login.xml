@@ -1,37 +1,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:layout_gravity="center_horizontal|center_vertical" >
 
+    
+    <LinearLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:layout_gravity="center_horizontal|center_vertical">
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Email" />
-
-	    <EditText
-	        android:id="@+id/txtLoginEmail"
+	    <TextView
+	        android:id="@+id/textView1"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:ems="10"
-	        android:inputType="textEmailAddress" >
+	        android:text="Email"/>
 	
-	        <requestFocus />
+		    <EditText
+		        android:id="@+id/txtLoginEmail"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:ems="10"
+		        android:inputType="textEmailAddress" >
+		
+		        <requestFocus />
+	
+		    </EditText>
 
-	    </EditText>
-
+	 </LinearLayout> 
+     "<LinearLayout 
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal"
+	    android:layout_gravity="center_horizontal|center_vertical"> 
 	    
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Password" />
-	    <EditText
-	        android:id="@+id/txtLoginPass"
+	    <TextView
+	        android:id="@+id/textView2"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:ems="10"
-	        android:inputType="textPassword" />
-
+	        android:text="Password" />
+		    <EditText
+		        android:id="@+id/txtLoginPass"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:ems="10"
+		        android:inputType="textPassword" />
+ 	</LinearLayout> 
 </LinearLayout>

@@ -59,6 +59,8 @@ public class Home extends ListActivity {
  	private Boolean filter_business_cat;
  	private Boolean filter_food_cat;
 
+ 	
+ 	private Boolean updatedPrefs = false;
 
 	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +100,13 @@ public class Home extends ListActivity {
     	filter_music_cat = preferences.getBoolean("music_cat", true);
     	filter_business_cat = preferences.getBoolean("business_cat", true);
     	filter_food_cat = preferences.getBoolean("food_cat", true);
+    	
+    	//Default city to Stevens Point if its blank
+    	if (filter_city.equals("n/a"))
+    	{
+    		filter_city = "Stevens Point";
+    	}
+    	
         
         //Read the preferences to see if there is any saved account id
         tmpAccountId = preferences.getString("pref_account_id", "no"); 
@@ -153,9 +162,11 @@ public class Home extends ListActivity {
 		};
 	private void setPost(Vector<Post> post1) {
 		this.posts = post1;
+		mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		CustomAdapter adapter = new CustomAdapter(this, android.R.id.list, posts);
         setListAdapter(adapter);        
         getListView().setTextFilterEnabled(true);
+        adapter.notifyDataSetChanged();
 	}
 	
 	private void setAccount(Account account) {
@@ -214,6 +225,8 @@ public class Home extends ListActivity {
     			Toast.makeText(getApplicationContext(),
     					"Successfully logged out",
     	                Toast.LENGTH_SHORT).show();
+    			
+    			currentAccount = null;
     			break;
 
     		case R.id.menu_login:
@@ -244,6 +257,7 @@ public class Home extends ListActivity {
 	    //Show the search text box
     	txtSearch.setVisibility(View.VISIBLE);
     	txtSearch.setFocusable(true);
+    	txtSearch.requestFocus();
     	
 	    switch (item.getItemId()) {
 	        case R.id.search_byAccount:
@@ -262,38 +276,56 @@ public class Home extends ListActivity {
 	
 	private void setSearchText(String filterBy)
 	{
-		txtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        	
-            if (actionId == EditorInfo.IME_ACTION_DONE ||
-            	actionId == EditorInfo.IME_ACTION_GO ||
-            	actionId == EditorInfo.IME_ACTION_NEXT) {
-            	performPostsSearch();
-                return true;
-            }
-            return false;
-        }});
 
+		final String filterBy2 = filterBy;
+		txtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+	        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+	        	
+	            if (actionId == EditorInfo.IME_ACTION_DONE ||
+	            	actionId == EditorInfo.IME_ACTION_GO ||
+	            	actionId == EditorInfo.IME_ACTION_NEXT) {
+	            	performPostsSearch(filterBy2);
+	                return true;
+	            }
+	            return false;
+	        }});
+  
+	}
+		
+	private void performPostsSearch(String filterBy)
+	{
 		
 		if (filterBy.equals("byAccount"))
 		{
-			parameters.setAccountId(txtSearch.getText().toString());
+			//Remove any previous search filter
+			parameters.setLowDate("");
+			parameters.setHighDate("");
+			parameters.setTitle("");
+			
+			//Set new search filter
+			parameters.setAccountLastName(txtSearch.getText().toString());
 		}
 		else if (filterBy.equals("byTitle"))
 		{
+			//Remove any previous search filter
+			parameters.setLowDate("");
+			parameters.setHighDate("");
+			parameters.setAccountLastName(""); 
+			
+			//Set new search filter
 			parameters.setTitle(txtSearch.getText().toString());
 		}
 		else if (filterBy.equals("byDate"))
 		{
-			parameters.setHighDate(txtSearch.getText().toString());
+			//Remove any previous search filter
+			parameters.setTitle("");
+			parameters.setAccountLastName(""); 
+			
+			//Set new search filter
+			parameters.setHighDate(txtSearch.getText().toString()); //TODO: Put date time picker??
 			parameters.setLowDate(txtSearch.getText().toString());
-			//TODO: how to format search date? Allow them to enter month name? or in gay format?
 		}
-  
-	}
 		
-	private void performPostsSearch()
-	{
 		Toast.makeText(getApplicationContext(),
 				"Performing Search",
                 Toast.LENGTH_SHORT).show();
@@ -316,7 +348,7 @@ public class Home extends ListActivity {
 		//Pass the post to the post view intent
 		String[] postInfo = new String[]
 				{
-					String.valueOf(selectedPost.getAccountID()),
+					selectedPost.getAccountID(),
 					selectedPost.getTitle(),
 					selectedPost.getDesc(),
 					selectedPost.getCategory(),
@@ -469,7 +501,7 @@ public class Home extends ListActivity {
 			Intent intent = new Intent();
 			intent.setClass(getApplicationContext(), Create_Post.class);
 			intent.putExtra("accountId", accountId);
-			startActivity(intent);	
+			startActivityForResult(intent, 4);	
 		}
 	}
 
@@ -502,8 +534,13 @@ public class Home extends ListActivity {
     			setOptionText();
     			
     	    	//TODO call data access for new set of posts with correct filters
-    	        Da = new DataAccess(this, onResponseListener, parameters);
-    	        Da.execute("6");
+    			
+    			if (updatedPrefs == true)
+    			{
+    				//Only get new list if the prefs change
+	    	        Da = new DataAccess(this, onResponseListener, parameters);
+	    	        Da.execute("6");
+    			}
     	        
     			break;
     		case 3:
@@ -527,6 +564,14 @@ public class Home extends ListActivity {
 	    			editor.commit();
 	            	updateCreatePostEnabledStatus(true);
     			}
+    			break;
+    		case 4: //Create Post
+    			if (resCode == RESULT_OK)
+    			{
+    				//TODO: add post to list
+    				Da = new DataAccess(this, onResponseListener, parameters);
+ 	    	        Da.execute("6");
+    			}
     	}
     	
     	
@@ -544,28 +589,6 @@ public class Home extends ListActivity {
     	filter_music_cat = preferences.getBoolean("music_cat", false);
     	filter_business_cat = preferences.getBoolean("business_cat", false);
     	filter_food_cat = preferences.getBoolean("food_cat", false);
-
-    	/*accountEmail = preferences.getString(
-    	        resources.getString(R.string.preferred_Account),
-    	        resources.getString(R.string.sort_option_default_value));*/ //TODO delete
-
-    	
-    	/*if (!accountEmail.equals("") && !accountEmail.equals("Guest"))
-    	{
-	    	datasource = new LocalAccountsDataSource(this);
-	    	datasource.open();
-	    	currentAccount = datasource.getAccount(accountEmail);
-	    	updateCreatePostEnabledStatus(true);
-	    	//todo: when we have it set up, call the actual get account from the server.
-    	}
-    	else
-    	{
-    		//Disable the Createpost button
-    		currentAccount = null;
-    		updateCreatePostEnabledStatus(false);
-    	}
-*/ //TODO delete..probably dont need any of this anymore
-    	
     	
     	Time now = new Time();
     	now.setToNow();
@@ -576,12 +599,25 @@ public class Home extends ListActivity {
 		Date highDate = new Date(now.year, now.month, now.monthDay);
     	*/
     	
-    	Integer lDate = now.year + now.month + now.monthDay;
+    	/*Integer lDate = now.year + now.month + now.monthDay;
     	String lowDate = lDate.toString();
     	Integer hDate = now.year + now.month + now.monthDay;
     	String highDate = hDate.toString();
+    	*/
     	
-    	parameters = new SelectionParameters(lowDate,highDate,filter_city, filter_music_cat, filter_business_cat, filter_food_cat,"");
+    	String lowDate = now.year + "-" + now.month + "-" + now.monthDay;
+    	String HighDate = now.year + "-" + now.month + "-" + now.monthDay;
+    	
+    	if (filter_city != parameters.getCity() || filter_music_cat != parameters.getMusic_category() || filter_business_cat != parameters.getBusiness_category() || filter_food_cat != parameters.getFood_category() )
+    	{
+    		updatedPrefs = true;
+    	}
+    	else 
+    	{
+    		updatedPrefs = false;
+    	}
+    	
+    	parameters = new SelectionParameters(null,null,filter_city, filter_music_cat, filter_business_cat, filter_food_cat,"");
     	
 
     	

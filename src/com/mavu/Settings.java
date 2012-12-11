@@ -27,10 +27,10 @@ public class Settings extends PreferenceActivity {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.main);
         
-        datasource = new LocalAccountsDataSource(this);
+        /*datasource = new LocalAccountsDataSource(this);
         datasource.open();
         
-        ArrayList<String> pAccounts = new ArrayList<String>();
+         ArrayList<String> pAccounts = new ArrayList<String>();
         pAccounts = datasource.getAccountEmails();
         String[] possibleAccounts = new String[pAccounts.size()];
         possibleAccounts = pAccounts.toArray(possibleAccounts);
@@ -39,7 +39,7 @@ public class Settings extends PreferenceActivity {
 		@SuppressWarnings("deprecation")
 		ListPreference lp = (ListPreference) findPreference("prefs_account_key");
         lp.setEntries(possibleAccounts);
-        lp.setEntryValues(possibleAccounts);
+        lp.setEntryValues(possibleAccounts); */
         
         
     }
