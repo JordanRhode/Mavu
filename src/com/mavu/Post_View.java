@@ -44,11 +44,16 @@ public class Post_View extends Activity {
 		 EditText time = ((EditText) findViewById(R.id.txtTime));
 		 time.setText(post.getTime());
 		 
+		 
+		 String dateVals[] = post.getDate().split("-");
+		 
+		 int month = Integer.parseInt(dateVals[1]);
+		 String monthStr = getMonthString(month);
 			
 			
 		//Date setting
 		 EditText date = ((EditText) findViewById(R.id.txtDate));
-		 date.setText(post.getDate().toString());
+		 date.setText(monthStr + " " + dateVals[2] + ", " + dateVals[0]);
 
         
         //Todo: We will have to serialize the object i guess to pass it...Rhode? You had fun with this right?
@@ -85,6 +90,29 @@ public class Post_View extends Activity {
 		startActivity(intent);		
     	
     }
+    
+	private String getMonthString(int i)
+
+	{
+		String month = "";
+				
+		switch (i)
+		{
+			case 0: month = "January"; break;
+			case 1: month = "February"; break;
+			case 2: month = "March"; break;
+			case 3: month = "April"; break;
+			case 4: month = "May"; break;
+			case 5: month = "June"; break;
+			case 6: month = "July"; break;
+			case 7: month = "August"; break;
+			case 8: month = "September"; break;
+			case 9: month = "October"; break;
+			case 10: month = "November"; break;
+			case 11: month = "December"; break;					
+		}
+		return month;
+	}
 	
 
 }

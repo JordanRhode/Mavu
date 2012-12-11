@@ -181,6 +181,38 @@ public class Create_Post extends Activity {
 	    
 	    private void setNewDate(int year, int month, int day)
 	    {
+	    	Boolean failed = false;
+	    	Time now = new Time();
+	    	now.setToNow();
+	    	if (year < now.year)
+	    	{
+	            failed = true;
+	    	}
+	    	else if(year == now.year)
+	    	{
+	    		if (month < now.month)
+	    		{
+	    			failed = true;
+	    		}
+	    		else if(month == now.month)
+	    		{
+	    			if(day < now.monthDay)
+	    			{
+	    				failed = true;
+	    			}
+	    		}
+	    	}
+	    	
+	    	
+	    	if (failed)
+	    	{
+	    		Toast.makeText(getApplicationContext(),
+	    				"Event is set to a date in the past. Please choose another date",
+	                    Toast.LENGTH_SHORT).show();
+	    	}
+	    	else
+	    	{
+	    	
 	    	String monthStr = getMonthString(month);
 	    	String tMonth = String.valueOf(month);
 	    	String tDay = String.valueOf(day);
@@ -195,7 +227,10 @@ public class Create_Post extends Activity {
 	    	{
 	    		tDay = "0" + tDay;
 	    	}
+	    	
 	    	storedDate = year + "-" + tMonth + "-" + tDay;
+	    	}
+	    	
 	    
 	    }
 	    

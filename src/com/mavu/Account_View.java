@@ -49,9 +49,9 @@ public class Account_View extends Activity {
 		txtDOB.setText(account.getDob());
 		
 		lblLikes = ((TextView) findViewById(R.id.lblLikes));
-		lblLikes.setText(account.getLikes());
+		//lblLikes.setText(account.getLikes());
 		lblDislikes = ((TextView) findViewById(R.id.lblDislikes));
-		lblDislikes.setText(account.getDislikes());
+		//lblDislikes.setText(account.getDislikes());
 	}
 	protected OnResponseListener onResponseListener = new OnResponseListener() {
 		

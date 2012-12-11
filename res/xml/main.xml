@@ -6,7 +6,8 @@
             android:key="pref_account_id"
             android:summary="Current Account Id"
             android:title="@string/prefs_account_id"
-            android:shouldDisableView="true" />
+            android:shouldDisableView="true"
+            android:enabled="false" />
         
    <!--   <ListPreference
 	    android:key="@string/preferred_Account"
