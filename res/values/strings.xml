@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <string name="app_name">Mavu</string>
@@ -39,7 +40,6 @@
     <string name="prefs_food_cat">Show Food</string>
     <string name="prefs_business_cat">Show Businesses</string>
     <string name="view_owner">View Owner</string>
-    
     <string name="Title">Event Title</string>
     <string name="Category">Category</string>
     <string name="Address">Address</string>
@@ -58,5 +58,6 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_login">Login</string>
+    <string name="myPosts">My Posts</string>
 
 </resources>

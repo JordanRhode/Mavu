@@ -43,10 +43,13 @@ public final class R {
         public static final int btnSetDatePost=0x7f0a0016;
         public static final int btnSetTimePost=0x7f0a0018;
         public static final int createPost=0x7f0a002a;
+        public static final int deletePost=0x7f0a0030;
+        public static final int editPost=0x7f0a002f;
         public static final int lblDislikes=0x7f0a0010;
         public static final int lblLikes=0x7f0a000e;
         public static final int menu_login=0x7f0a0025;
         public static final int menu_logout=0x7f0a002c;
+        public static final int menu_my_posts=0x7f0a002d;
         public static final int menu_prefs=0x7f0a002b;
         public static final int menu_settings=0x7f0a0026;
         public static final int postDate=0x7f0a001e;
@@ -57,9 +60,9 @@ public final class R {
         public static final int save_post=0x7f0a0027;
         public static final int search=0x7f0a0028;
         public static final int searchText=0x7f0a0021;
-        public static final int search_byAccount=0x7f0a002f;
-        public static final int search_byDate=0x7f0a0030;
-        public static final int search_byTitle=0x7f0a002e;
+        public static final int search_byAccount=0x7f0a0033;
+        public static final int search_byDate=0x7f0a0034;
+        public static final int search_byTitle=0x7f0a0032;
         public static final int spnCategory=0x7f0a0014;
         public static final int textView1=0x7f0a0000;
         public static final int textView2=0x7f0a0002;
@@ -84,7 +87,8 @@ public final class R {
         public static final int txtPassword=0x7f0a000a;
         public static final int txtTime=0x7f0a0017;
         public static final int txtTitle=0x7f0a0013;
-        public static final int view_owner=0x7f0a002d;
+        public static final int viewPost=0x7f0a002e;
+        public static final int view_owner=0x7f0a0031;
     }
     public static final class layout {
         public static final int account_maint_layout=0x7f030000;
@@ -102,9 +106,11 @@ public final class R {
         public static final int checkbox_menu=0x7f090002;
         public static final int create_post_menu=0x7f090003;
         public static final int home_menu=0x7f090004;
-        public static final int owner_info_menu=0x7f090005;
-        public static final int post_info_menu=0x7f090006;
-        public static final int search_context_menu=0x7f090007;
+        public static final int my_posts=0x7f090005;
+        public static final int owner_info_menu=0x7f090006;
+        public static final int post_context_menu=0x7f090007;
+        public static final int post_info_menu=0x7f090008;
+        public static final int search_context_menu=0x7f090009;
     }
     public static final class string {
         public static final int Address=0x7f070029;
@@ -137,6 +143,7 @@ public final class R {
         public static final int menu_prefs_title=0x7f07001e;
         public static final int menu_quit_title=0x7f07001f;
         public static final int menu_settings=0x7f070008;
+        public static final int myPosts=0x7f070032;
         public static final int post_view=0x7f070007;
         public static final int prefSummary=0x7f07001a;
         public static final int prefTitle=0x7f070019;

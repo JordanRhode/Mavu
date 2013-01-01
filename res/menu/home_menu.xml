@@ -15,6 +15,13 @@
         android:title="@string/prefs"
         android:icon="@drawable/settings"
         android:showAsAction="always"/>
+    
+        
+    <item android:id="@+id/menu_my_posts"
+        android:title="My Posts"
+        android:showAsAction="ifRoom"
+        android:visible="true"/>
+    
     <item android:id="@+id/menu_logout"
         android:title="@string/logout"
         android:showAsAction="ifRoom"
@@ -23,4 +30,5 @@
         android:title="@string/login"
         android:showAsAction="ifRoom"
         android:visible="false"/>
+
 </menu>

@@ -8,6 +8,7 @@ import java.util.Vector;
 import com.mavu.appcode.Account;
 import com.mavu.appcode.DataAccess;
 import com.mavu.appcode.LocalAccountsDataSource;
+import com.mavu.appcode.MavuDateFormatter;
 import com.mavu.appcode.Post;
 import com.mavu.appcode.SelectionParameters;
 import com.mavu.appcode.ViewHolder;
@@ -160,7 +161,8 @@ public class Home extends ListActivity {
 			public void onSuccess(String accountID) {
 			}
 		};
-	private void setPost(Vector<Post> post1) {
+
+		private void setPost(Vector<Post> post1) {
 		this.posts = post1;
 		mInflater = (LayoutInflater) getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
 		CustomAdapter adapter = new CustomAdapter(this, android.R.id.list, posts);
@@ -233,7 +235,28 @@ public class Home extends ListActivity {
     			Intent intent2 = new Intent();
     			intent2.setClass(this, Login.class);
     			startActivityForResult(intent2, 3);
+    			break;
     			
+    		case R.id.menu_my_posts:
+    			Intent intent3 = new Intent(); /*TODO*/
+    			intent3.setClass(this, MyPosts.class);
+    			
+    			if (currentAccount != null && currentAccount.getEmail() != null && !currentAccount.getEmail().equals(""))
+    			{
+    				String[] accountInfo = new String[]{String.valueOf(currentAccount.getAccountId()),
+    													currentAccount.getfName(),
+    													currentAccount.getlName(),
+    													currentAccount.getEmail(),
+    													currentAccount.getDob(),
+    													currentAccount.getPassword(),
+    													String.valueOf(currentAccount.getLikes()),
+    													String.valueOf(currentAccount.getDislikes())};	
+    			    
+    		    
+    				intent3.putExtra("accountInfo", accountInfo);
+    			}
+    			startActivityForResult(intent3, 4);
+    			break;
     		             			  		       
     	} 	
     	return super.onOptionsItemSelected(item);
@@ -406,11 +429,12 @@ public class Home extends ListActivity {
 			time.setText(post.getTime());
 			
 			date = holder.getDate();
-			String[] dateVals = post.getDate().split("-");
+			/*String[] dateVals = post.getDate().split("-");
 			String monthStr = getMonthString(Integer.parseInt(dateVals[1]));
 			String dateStr = monthStr + " " + dateVals[2] + ", " + dateVals[0];
 	
-			date.setText(dateStr + " -");
+			date.setText(dateStr + " -");*/
+			date.setText(MavuDateFormatter.format(post.getDate()) + " -");
 
 			description = holder.getDescription();		
 			description.setText(post.getDesc());
@@ -418,7 +442,8 @@ public class Home extends ListActivity {
 			return convertView;
 		}
 		
-		private String getMonthString(int i)
+		/* TODO: now imlemented in static class: MavuDateFormatter so that we have consistency through other activities
+		 * private String getMonthString(int i)
 		{
 			String month = "";
 					
@@ -438,7 +463,7 @@ public class Home extends ListActivity {
 				case 12: month = "December"; break;					
 			}
 			return month;
-		}
+		}*/
 		
 		private int setImageType(String category)
 		{
@@ -626,15 +651,21 @@ public class Home extends ListActivity {
     private void updateCreatePostEnabledStatus(boolean status)
     {
     	// 2 - Create post. If we update the menu layout then we need to change this
-    	// 4 - Logout
-    	// 5 - login
+    	// 4 - View MY posts
+    	// 5 - Logout
+    	// 6 - login
+
     	menu.getItem(2).setEnabled(status);
     	menu.getItem(2).setVisible(status);
-    	
+
     	menu.getItem(4).setEnabled(status);
     	menu.getItem(4).setVisible(status);
-    	menu.getItem(5).setEnabled(!status);
-    	menu.getItem(5).setVisible(!status);
+    	menu.getItem(5).setEnabled(status);
+    	menu.getItem(5).setVisible(status);
+    	menu.getItem(6).setEnabled(!status);
+    	menu.getItem(6).setVisible(!status);
+    	
+
     
     }
      

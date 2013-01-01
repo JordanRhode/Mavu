@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+     <item android:id="@+id/viewPost"
+        android:title="View"
+        android:showAsAction="always"/>
+    <item android:id="@+id/editPost"
+        android:title="Edit"
+        android:showAsAction="always" />
+    <item android:id="@+id/deletePost"
+        android:title="Delete"
+        android:showAsAction="always"/>
+</menu>

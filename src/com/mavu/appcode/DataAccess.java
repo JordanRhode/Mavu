@@ -92,7 +92,9 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 		 * case 5: Create Post
 		 * case 6: Get Posts
 		 * case 7: See if account username is taken
-		 * case 8: Get Account (By email)
+		 * case 8: Get My Posts (pass in account ID) TODO
+		 * case 9: Delete post (pass in post) TODO
+		 * case 10: Update posts (pass in post) TODO
 		 */
 		List<NameValuePair> nameValuePair;
 		InputStream is = null;
@@ -474,8 +476,11 @@ public class DataAccess extends AsyncTask<String, Integer, Boolean> {
 				case 6: 
 					responder.onSuccess(posts);
 					break;	
-				case 8: //Get Account (By Email)
-					responder.onSuccess(account);
+				case 8: //Get posts based on account ID
+					responder.onSuccess(posts);
+					break;
+				case 9: //Delete post
+					responder.onSuccess(result);
 					break;
 			}
 			
