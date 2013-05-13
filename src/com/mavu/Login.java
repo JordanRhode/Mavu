@@ -16,7 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class Login extends Activity {
-	
+  
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,63 +33,63 @@ public class Login extends Activity {
 @Override
     public boolean onOptionsItemSelected(MenuItem item) 
     {
-    	switch (item.getItemId())
-    	{
-    		case R.id.menu_login:
-    			String email = ((EditText) findViewById(R.id.txtLoginEmail)).getText().toString();
-    			String pass = ((EditText) findViewById(R.id.txtLoginPass)).getText().toString();
-    			
-    			
-    		    DataAccess Da = new DataAccess(this, onResponseListener);
-    	        Da.execute("1", email, pass);
-    			break;
-    			
-    		
-    			
-    		             			  		       
-    	} 	
-    	return super.onOptionsItemSelected(item);
-    	//return true;
+      switch (item.getItemId())
+      {
+        case R.id.menu_login:
+          String email = ((EditText) findViewById(R.id.txtLoginEmail)).getText().toString();
+          String pass = ((EditText) findViewById(R.id.txtLoginPass)).getText().toString();
+          
+          
+            DataAccess Da = new DataAccess(this, onResponseListener);
+              Da.execute("1", email, pass);
+          break;
+          
+        
+          
+                                       
+      }   
+      return super.onOptionsItemSelected(item);
+      //return true;
 
     }
 
-	private void setAccount(Account account)
-	{
-		//Pass back values to Home and close this activity. Resource: http://stackoverflow.com/questions/1124548/how-to-pass-the-values-from-one-activity-to-previous-activity
-		String[] newAccountInfo = new String[]{account.getAccountId(),
-				account.getfName(),
-				account.getlName(),
-				account.getEmail(),
-				account.getDob(),
-				account.getPassword(),
-				String.valueOf(account.getLikes()),
-				String.valueOf(account.getDislikes())};
-		
-		Intent resultIntent = getIntent();
-		resultIntent.putExtra("newAccountInfo", newAccountInfo);
-		setResult(Activity.RESULT_OK, resultIntent);
-		finish();	
-	}
+  private void setAccount(Account account)
+  {
+    //Pass back values to Home and close this activity. Resource: http://stackoverflow.com/questions/1124548/how-to-pass-the-values-from-one-activity-to-previous-activity
+    String[] newAccountInfo = new String[]{account.getAccountId(),
+        account.getfName(),
+        account.getlName(),
+        account.getEmail(),
+        account.getDob(),
+        account.getPassword(),
+        String.valueOf(account.getLikes()),
+        String.valueOf(account.getDislikes())};
+    
+    Intent resultIntent = getIntent();
+    resultIntent.putExtra("newAccountInfo", newAccountInfo);
+    setResult(Activity.RESULT_OK, resultIntent);
+    finish(); 
+  }
 protected OnResponseListener onResponseListener = new OnResponseListener() {
-	
-	public void onFailure(String message) {
-		Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();	
-	}
+  
+  public void onFailure(String message) {
+    Toast.makeText(getApplicationContext(), "Failure, message: " + message, Toast.LENGTH_LONG).show();  
+  }
 
-	public void onSuccess(Vector<Post> posts) {
-		
-	}
-	
-	public void onSuccess(Account account) {
-		setAccount(account);
+  public void onSuccess(Vector<Post> posts) {
+    
+  }
+  
+  public void onSuccess(Account account) {
+    setAccount(account);
 
-	}
+  }
 
-	public void onSuccess(Boolean passed) {
-	}
-	
-	public void onSuccess(String accountID) {
-	}
+  public void onSuccess(Boolean passed) {
+  }
+  
+  public void onSuccess(String accountID) {
+  }
 };
 
 }

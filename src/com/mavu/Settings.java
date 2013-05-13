@@ -20,9 +20,9 @@ import android.view.MenuItem;
 
 public class Settings extends PreferenceActivity {
 
-	private LocalAccountsDataSource datasource;
+    private LocalAccountsDataSource datasource;
     @SuppressLint("NewApi")
-	@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.main);
@@ -36,8 +36,8 @@ public class Settings extends PreferenceActivity {
         possibleAccounts = pAccounts.toArray(possibleAccounts);
 
         
-		@SuppressWarnings("deprecation")
-		ListPreference lp = (ListPreference) findPreference("prefs_account_key");
+        @SuppressWarnings("deprecation")
+        ListPreference lp = (ListPreference) findPreference("prefs_account_key");
         lp.setEntries(possibleAccounts);
         lp.setEntryValues(possibleAccounts); */
         

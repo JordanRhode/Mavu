@@ -48,8 +48,8 @@ public final class R {
         public static final int lblDislikes=0x7f0a0010;
         public static final int lblLikes=0x7f0a000e;
         public static final int menu_login=0x7f0a0025;
-        public static final int menu_logout=0x7f0a002c;
-        public static final int menu_my_posts=0x7f0a002d;
+        public static final int menu_logout=0x7f0a002d;
+        public static final int menu_my_posts=0x7f0a002c;
         public static final int menu_prefs=0x7f0a002b;
         public static final int menu_settings=0x7f0a0026;
         public static final int postDate=0x7f0a001e;
